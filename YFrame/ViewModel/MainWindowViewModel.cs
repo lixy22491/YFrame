@@ -1,7 +1,6 @@
 ﻿using LiveCharts.Defaults;
 using LiveCharts;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,16 +12,8 @@ namespace YFrame
     /// <summary>
     /// 主窗口
     /// </summary>
-    public class MainWindowViewModel : INotifyPropertyChanged, I_YF_Detail
+    public class MainWindowViewModel : ViewModelBase, I_YF_Detail
     {
-        #region INotifyPropertyChanged接口实现
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
 
         #region 绑定属性（XAML 绑定点，保留在此处）
 
@@ -30,112 +21,56 @@ namespace YFrame
         public bool LeftVisible
         {
             get => _leftVisible;
-            set
-            {
-                if (_leftVisible != value)
-                {
-                    _leftVisible = value;
-                    OnPropertyChanged(nameof(LeftVisible));
-                }
-            }
+            set => SetProperty(ref _leftVisible, value);
         }
 
         private bool _rightVisible; // 右抽屉显示状态
         public bool RightVisible
         {
             get => _rightVisible;
-            set
-            {
-                if (_rightVisible != value)
-                {
-                    _rightVisible = value;
-                    OnPropertyChanged(nameof(RightVisible));
-                }
-            }
+            set => SetProperty(ref _rightVisible, value);
         }
 
         private string _txt_Cpu = "--%";  // CPU显示状态
         public string Txt_Cpu
         {
             get => _txt_Cpu;
-            set
-            {
-                if (_txt_Cpu != value)
-                {
-                    _txt_Cpu = value;
-                    OnPropertyChanged(nameof(Txt_Cpu));
-                }
-            }
+            set => SetProperty(ref _txt_Cpu, value);
         }
 
         private string _txt_Memory = "--GB";  // 内存显示状态
         public string Txt_Memory
         {
             get => _txt_Memory;
-            set
-            {
-                if (_txt_Memory != value)
-                {
-                    _txt_Memory = value;
-                    OnPropertyChanged(nameof(Txt_Memory));
-                }
-            }
+            set => SetProperty(ref _txt_Memory, value);
         }
 
         private string _logText = string.Empty;  // 日志显示
         public string LogText
         {
             get => _logText;
-            set
-            {
-                if (_logText != value)
-                {
-                    _logText = value;
-                    OnPropertyChanged(nameof(LogText));
-                }
-            }
+            set => SetProperty(ref _logText, value);
         }
 
         private UserControl _performance_Monitor_View = null!;  // 性能监视器
         public UserControl Performance_Monitor_View
         {
             get => _performance_Monitor_View;
-            set
-            {
-                if (_performance_Monitor_View != value)
-                {
-                    _performance_Monitor_View = value;
-                    OnPropertyChanged(nameof(Performance_Monitor_View));
-                }
-            }
+            set => SetProperty(ref _performance_Monitor_View, value);
         }
 
         private Grid _grid_Show_Array = null!;  // 用户控件(插件)显示列表
         public Grid Grid_Show_Array
         {
             get => _grid_Show_Array;
-            set
-            {
-                if (_grid_Show_Array != value)
-                {
-                    _grid_Show_Array = value;
-                    OnPropertyChanged(nameof(Grid_Show_Array));
-                }
-            }
+            set => SetProperty(ref _grid_Show_Array, value);
         }
 
         private bool _isFullScreen;  // 是否处于全屏状态
         public bool IsFullScreen
         {
             get => _isFullScreen;
-            set
-            {
-                if (_isFullScreen != value)
-                {
-                    _isFullScreen = value;
-                    OnPropertyChanged(nameof(IsFullScreen));
-                }
-            }
+            set => SetProperty(ref _isFullScreen, value);
         }
 
         private bool _isHotkeyEnabled;  // 热键监控是否开启
@@ -144,12 +79,8 @@ namespace YFrame
             get => _isHotkeyEnabled;
             set
             {
-                if (_isHotkeyEnabled != value)
-                {
-                    _isHotkeyEnabled = value;
-                    OnPropertyChanged(nameof(IsHotkeyEnabled));
+                if (SetProperty(ref _isHotkeyEnabled, value))
                     OnPropertyChanged(nameof(HotkeyStatusText));
-                }
             }
         }
 
@@ -163,14 +94,7 @@ namespace YFrame
         public int ActiveLeftPanel
         {
             get => _activeLeftPanel;
-            set
-            {
-                if (_activeLeftPanel != value)
-                {
-                    _activeLeftPanel = value;
-                    OnPropertyChanged(nameof(ActiveLeftPanel));
-                }
-            }
+            set => SetProperty(ref _activeLeftPanel, value);
         }
 
         /// <summary>
@@ -180,14 +104,7 @@ namespace YFrame
         public int ActiveRightPanel
         {
             get => _activeRightPanel;
-            set
-            {
-                if (_activeRightPanel != value)
-                {
-                    _activeRightPanel = value;
-                    OnPropertyChanged(nameof(ActiveRightPanel));
-                }
-            }
+            set => SetProperty(ref _activeRightPanel, value);
         }
 
         public ObservableCollection<PluginsModel> lsPlugins { get; } = new ObservableCollection<PluginsModel>(); // 插件列表
@@ -201,13 +118,8 @@ namespace YFrame
             get => _selectedPlugin;
             set
             {
-                if (_selectedPlugin != value)
-                {
-                    _selectedPlugin = value;
-                    OnPropertyChanged(nameof(SelectedPlugin));
-                    if (value != null)
-                        ShowPlugin(value.ID);
-                }
+                if (SetProperty(ref _selectedPlugin, value) && value != null)
+                    ShowPlugin(value.ID);
             }
         }
 

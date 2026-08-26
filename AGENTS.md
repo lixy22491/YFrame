@@ -75,6 +75,7 @@ YFrame/
 │
 ├── YF_Manager/                         # 共享框架库
 │   ├── YF_Manager.cs                   # 静态入口：YF_Manager_Main 类 + 静态 logger
+│   ├── BaseClass/ViewModelBase.cs      # 基类 ViewModel（实现 INotifyPropertyChanged + SetProperty）
 │   ├── Interface/
 │   │   ├── I_YF_Detail.cs              # 插件元数据接口（YF_ID, YF_Name）
 │   │   └── I_YF_Command.cs             # 插件命令接口（ExecuteCommand, OnPluginCallback）
@@ -113,7 +114,7 @@ YFrame/
 │   │   │   ├── LogServiceTests.cs             # 14 个 — 日志缓冲区管理
 │   │   │   └── PluginServiceTests.cs          # 20 个 — 插件调度、命令路由
 │   │   └── Model/
-│   │       ├── PluginsModelTests.cs           # 8 个 — INotifyPropertyChanged
+│   │       ├── PluginsModelTests.cs           # 8 个 — ViewModelBase 属性通知
 │   │       └── CtrlDataModelTests.cs          # 5 个 — 插件实例数据模型
 │
 ├── YFrame.Installer/                   # 框架安装程序（WPF 向导式，仅安装本体）

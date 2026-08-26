@@ -134,7 +134,7 @@ plugins/                       所有插件项目
 | **依赖注入 (DI)** | `App.xaml.cs` DI 容器 + 全部 6 个服务 | 消除 `XXX.Instance` 硬编码，松耦合，可单元测试 |
 | **属性注入** | `MainWindowViewModel`、`UserControlsService` | 兼容 Castle `CreateClassProxy` 无参构造要求 |
 | **代理模式 (Proxy) / AOP** | `LogInterceptor` + Castle.Core `ProxyGenerator` | 在不修改业务代码的前提下，透明地注入日志记录逻辑 |
-| **观察者模式 (Observer)** | `INotifyPropertyChanged` + 数据绑定、`OnPluginCallback` 事件 | View 与 ViewModel 解耦；插件向宿主回传数据 |
+| **观察者模式 (Observer)** | `ViewModelBase`（实现 `INotifyPropertyChanged`）+ 数据绑定、`OnPluginCallback` 事件 | View 与 ViewModel 解耦；插件向宿主回传数据 |
 | **命令模式 (Command)** | `YF_RelayCommand` / `YF_RelayCommand<T>` | 将 UI 操作抽象为可绑定、可测试的命令对象 |
 | **策略模式 (Strategy)** | 主题切换（`ResourceDictionary` 替换）、语言切换 | 运行时动态替换行为（外观/文本），无需修改代码 |
 | **工厂模式 (Factory)** | `UserControlsService.TryLoadPlugin()` 反射创建实例 | 根据运行时发现的类型信息动态创建插件实例 |
@@ -196,7 +196,7 @@ services.AddSingleton(sp => {
            │  DataContext = MainWindowViewModel.Instance
 ┌──────────▼───────────┐
 │    ViewModel         │
-│  · INotifyPropertyChanged │ → 属性变更通知 View
+│  · ViewModelBase          │ → 属性变更通知 View（继承基类）
 │  · ICommand (RelayCommand)│ → 处理 View 的用户操作
 │  · 业务逻辑              │ → 调用 Service 层
 └──────────┬───────────┘
@@ -299,6 +299,7 @@ YFrame/
 │
 ├── YF_Manager/                         # 共享框架库 (Class Library)
 │   ├── YF_Manager.cs                   # 静态入口类（持有静态 logger 实例）
+│   ├── BaseClass/ViewModelBase.cs      # 基类 ViewModel（实现 INotifyPropertyChanged + SetProperty）
 │   ├── Interface/
 │   │   ├── I_YF_Detail.cs              # 插件元数据接口（YF_ID, YF_Name）
 │   │   └── I_YF_Command.cs             # 插件命令接口（ExecuteCommand, OnPluginCallback）
@@ -335,7 +336,7 @@ YFrame/
 │   │   │   ├── LogServiceTests.cs      # 14 个 — 日志缓冲区管理
 │   │   │   └── PluginServiceTests.cs   # 20 个 — 插件调度、命令路由
 │   │   └── Model/
-│   │       ├── PluginsModelTests.cs    # 8 个 — INotifyPropertyChanged
+│   │       ├── PluginsModelTests.cs    # 8 个 — ViewModelBase 属性通知
 │   │       └── CtrlDataModelTests.cs   # 5 个 — 插件实例数据模型
 │   └── Plugins/KMScript/
 │       └── ScriptInterpreterTests.cs   # 34 个 — DSL 脚本解析
@@ -954,7 +955,7 @@ git push → GitCode Actions/Pipeline 自动触发
 - `PluginServerService` 扫描 `plugins/` 目录，反射读取 `I_YF_Detail` 获取插件元数据
 - ZIP 打包使用 `System.IO.Compression.ZipFile`
 - 端口配置持久化到 `Config/config.conf`（`PluginServerPort` 键）
-- ViewModel 通过 `INotifyPropertyChanged` 驱动 UI，支持服务器启停、插件列表刷新、URL 复制
+- ViewModel 通过 `ViewModelBase`（实现 `INotifyPropertyChanged`）驱动 UI，支持服务器启停、插件列表刷新、URL 复制
 
 **UI 功能：**
 - 本机 IP 自动获取 + 端口配置（读写配置文件）

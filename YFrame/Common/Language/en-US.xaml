@@ -92,6 +92,7 @@
     <sys:String x:Key="key_Clicker_Hint_Count">Range: 10~10000 clicks</sys:String>
     <sys:String x:Key="key_Clicker_Start">Start Click</sys:String>
     <sys:String x:Key="key_Clicker_Stop">Stop Click</sys:String>
+    <sys:String x:Key="key_Clicker_LogTitle">Run Log</sys:String>
     <sys:String x:Key="key_Clicker_HotkeyHint">Framework Hotkey: Ctrl+Y toggles clicker</sys:String>
 
     <!--脚本编辑器-->

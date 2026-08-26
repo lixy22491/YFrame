@@ -92,6 +92,7 @@
     <sys:String x:Key="key_Clicker_Hint_Count">范围：10~10000 次</sys:String>
     <sys:String x:Key="key_Clicker_Start">开始点击</sys:String>
     <sys:String x:Key="key_Clicker_Stop">停止点击</sys:String>
+    <sys:String x:Key="key_Clicker_LogTitle">运行记录</sys:String>
     <sys:String x:Key="key_Clicker_HotkeyHint">框架热键：Ctrl+Y 切换连点器启停</sys:String>
 
     <!--脚本编辑器-->

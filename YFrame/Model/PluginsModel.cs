@@ -1,53 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using YF_Manager;
 
 namespace YFrame
 {
     /// <summary>
     /// 插件-数据类型
     /// </summary>
-    public class PluginsModel: INotifyPropertyChanged
+    public class PluginsModel : ViewModelBase
     {
-        #region INotifyPropertyChanged接口实现
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
 
         private string _name;  
         public string Name
         {
             get => _name;
-            set
-            {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(nameof(Name));
-                }
-            }
+            set => SetProperty(ref _name, value);
         }
 
         private string _id;
         public string ID
         {
             get => _id;
-            set
-            {
-                if (_id != value)
-                {
-                    _id = value;
-                    OnPropertyChanged(nameof(ID));
-                }
-            }
+            set => SetProperty(ref _id, value);
         }
 
         /// <summary>
@@ -57,14 +34,7 @@ namespace YFrame
         public int Status
         {
             get => _status;
-            set
-            {
-                if (_status != value)
-                {
-                    _status = value;
-                    OnPropertyChanged(nameof(Status));
-                }
-            }
+            set => SetProperty(ref _status, value);
         }
     }
 }

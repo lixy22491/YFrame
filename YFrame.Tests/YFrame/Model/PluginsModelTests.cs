@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using YFrame;
+using YF_Manager;
 
 namespace YFrame.Tests.YFrame.Model
 {
@@ -100,13 +101,13 @@ namespace YFrame.Tests.YFrame.Model
         }
 
         /// <summary>
-        /// 实现了 INotifyPropertyChanged 接口
+        /// 继承 ViewModelBase 基类（提供属性变更通知能力）
         /// </summary>
         [Fact]
-        public void Implements_INotifyPropertyChanged()
+        public void Inherits_ViewModelBase()
         {
             var model = new PluginsModel();
-            Assert.IsAssignableFrom<INotifyPropertyChanged>(model);
+            Assert.IsAssignableFrom<ViewModelBase>(model);
         }
 
         /// <summary>
