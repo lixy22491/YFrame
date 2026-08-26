@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using YF_Manager;
 using System.IO;
+using YFrame.Model;
 
 namespace YFrame
 {
@@ -123,6 +124,48 @@ namespace YFrame
             }
         }
 
+        /// <summary>
+        /// 工具箱工具列表（左侧工具箱面板数据源）
+        /// </summary>
+        public ObservableCollection<ToolItem> Tools { get; } = new ObservableCollection<ToolItem>();
+
+        private ToolItem? _selectedTool;
+
+        /// <summary>
+        /// 当前在工具箱中选中的工具（选中即打开到主工作区）
+        /// </summary>
+        public ToolItem? SelectedTool
+        {
+            get => _selectedTool;
+            set
+            {
+                if (SetProperty(ref _selectedTool, value) && value != null)
+                    SelectTool(value.ID);
+            }
+        }
+
+        private UserControl? _activeToolView;
+
+        /// <summary>
+        /// 当前在主工作区打开的工具视图（null 表示未打开任何工具）
+        /// </summary>
+        public UserControl? ActiveToolView
+        {
+            get => _activeToolView;
+            set => SetProperty(ref _activeToolView, value);
+        }
+
+        private bool _isToolActive;
+
+        /// <summary>
+        /// 是否正在显示工具箱工具（用于主工作区叠加切换，true 时覆盖插件区）
+        /// </summary>
+        public bool IsToolActive
+        {
+            get => _isToolActive;
+            set => SetProperty(ref _isToolActive, value);
+        }
+
         #endregion
 
         #region 绑定命令（XAML 绑定点，委托给子服务）
@@ -148,6 +191,8 @@ namespace YFrame
         public ICommand PluginManagerCommand { get; set; } = null!;              // 插件管理器事件
         public ICommand ReloadPluginsCommand { get; set; } = null!;              // 重新加载所有插件事件
         public ICommand ToggleFullScreenCommand { get; set; } = null!;           // 全屏切换事件
+        public ICommand SelectToolCommand { get; set; } = null!;                // 打开工具箱工具事件（参数为工具ID）
+        public ICommand CloseToolCommand { get; set; } = null!;                 // 关闭工具箱工具事件
 
         #endregion
 
@@ -176,6 +221,7 @@ namespace YFrame
         private TrayIconService _trayIconService = null!;
         private YF_Messenger _messenger = null!;
         private YF_FileHelper _fileHelper = null!;
+        private ToolboxService _toolboxService = null!;
 
         /// <summary>
         /// 设置依赖项（由 DI 容器创建 AOP 代理后调用）
@@ -189,7 +235,8 @@ namespace YFrame
             HotkeyService hotkeyService,
             TrayIconService trayIconService,
             YF_Messenger messenger,
-            YF_FileHelper fileHelper)
+            YF_FileHelper fileHelper,
+            ToolboxService toolboxService)
         {
             _logger = logger;
             _logService = logService;
@@ -199,6 +246,7 @@ namespace YFrame
             _trayIconService = trayIconService;
             _messenger = messenger;
             _fileHelper = fileHelper;
+            _toolboxService = toolboxService;
         }
 
         #endregion
@@ -288,6 +336,10 @@ namespace YFrame
                         Status = 0
                     });
                 }
+
+                // 填充工具箱工具列表
+                foreach (var tool in _toolboxService.GetTools())
+                    Tools.Add(tool);
             }
             catch (Exception ex)
             {
@@ -418,6 +470,10 @@ namespace YFrame
 
                 // ===== 全屏切换 =====
                 ToggleFullScreenCommand = new YF_RelayCommand(() => ToggleFullScreen());
+
+                // ===== 工具箱工具 =====
+                SelectToolCommand = new YF_RelayCommand<string>(toolId => SelectTool(toolId));
+                CloseToolCommand = new YF_RelayCommand(() => CloseTool());
             }
             catch (Exception ex)
             {
@@ -560,6 +616,12 @@ namespace YFrame
         [Log(Level = LogLevel.Info, Message = "显示插件")]
         public virtual void ShowPlugin(string pluginId)
         {
+            // 显示插件时关闭工具箱工具视图，避免工具覆盖插件区
+            if (IsToolActive)
+            {
+                ActiveToolView = null;
+                IsToolActive = false;
+            }
             _pluginService.ShowPlugin(pluginId);
         }
 
@@ -595,6 +657,46 @@ namespace YFrame
         public virtual void ExecuteSaveScript()
         {
             _pluginService.ExecuteScriptCommand("Save");
+        }
+
+        #endregion
+
+        #region 工具箱操作（委托给 ToolboxService）
+
+        /// <summary>
+        /// 打开指定工具箱工具到主工作区（叠加显示，不清空插件区）
+        /// </summary>
+        /// <param name="toolId">工具唯一标识</param>
+        [Log(Level = LogLevel.Info, Message = "打开工具箱工具")]
+        public virtual void SelectTool(string toolId)
+        {
+            try
+            {
+                var view = _toolboxService.OpenTool(toolId);
+                if (view == null)
+                {
+                    _logger.ErrorInfo("SelectTool", $"工具箱中不存在该工具: {toolId}");
+                    return;
+                }
+                ActiveToolView = view;
+                IsToolActive = true;
+                _logger.LogInfo($"工具箱工具已打开: {toolId}");
+            }
+            catch (Exception ex)
+            {
+                _logger.ErrorInfo("SelectTool", ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 关闭当前工具箱工具，恢复显示插件区内容
+        /// </summary>
+        [Log(Level = LogLevel.Info, Message = "关闭工具箱工具")]
+        public virtual void CloseTool()
+        {
+            ActiveToolView = null;
+            IsToolActive = false;
+            _logger.LogInfo("工具箱工具已关闭");
         }
 
         #endregion

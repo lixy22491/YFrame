@@ -20,7 +20,7 @@ YFrame 是一个基于 **.NET 8.0 + WPF** 的**模块化插件桌面框架**，�
 |------|------|------|------|
 | YFrame | `YFrame\` | WPF Application | `YFrame.exe`（主框架 Shell） |
 | YF_Manager | `YF_Manager\` | Class Library | `YF_Manager.dll`（共享基础设施库） |
-| YFrame.Tests | `YFrame.Tests\` | xUnit Test Project | 单元测试（94 个用例） |
+| YFrame.Tests | `YFrame.Tests\` | xUnit Test Project | 单元测试（115 个用例） |
 | YFrame.Installer | `YFrame.Installer\` | WPF Application | `YFrame.Installer.exe`（框架安装程序，仅安装本体） |
 
 ### 插件（位于上层目录 `C:\Users\Administrator\Desktop\code\C#\`）
@@ -52,20 +52,24 @@ YFrame/
 │   ├── MainWindow.xaml                 # 主窗口布局（DockPanel三栏+Menu+StatusBar）
 │   ├── MainWindow.xaml.cs              # 代码后置：构造函数注入ViewModel+Hook服务，OnSourceInitialized初始化
 │   ├── ViewModel/
-│   │   └── MainWindowViewModel.cs      # 核心 ViewModel（~750行，薄门面，委托给子服务）
+│   │   ├── MainWindowViewModel.cs      # 核心 ViewModel（~750行，薄门面，委托给子服务）
+│   │   └── Toolbox/                    # 工具箱工具 ViewModel（取色器/正则测试/MD5校验）
 │   ├── Service/                        # 服务层（从 ViewModel/Service 迁移）
 │   │   ├── LogService.cs               # 日志面板服务（缓冲区管理、500行上限、通过 Mediator 接收日志消息）
 │   │   ├── PluginService.cs            # 插件管理服务（插件切换、命令转发、热键路由、脚本操作）
 │   │   ├── UserControlsService.cs      # 插件加载服务（200行，反射扫描/加载/实例化）
 │   │   ├── PluginManagerService.cs     # 插件管理器服务（AOP单例，HTTP通信、下载/解压插件）
 │   │   ├── HotkeyService.cs            # 全局热键服务（Win32 RegisterHotKey，AOP代理）
-│   │   └── TrayIconService.cs          # 系统托盘图标服务（Win32 Shell_NotifyIcon，AOP代理）
+│   │   ├── TrayIconService.cs          # 系统托盘图标服务（Win32 Shell_NotifyIcon，AOP代理）
+│   │   └── ToolboxService.cs           # 工具箱工具服务（工具注册表 + 视图工厂缓存）
 │   ├── Model/
 │   │   ├── PluginsModel.cs             # 插件列表模型（Name, ID, Status）
 │   │   ├── CtrlDataModel.cs            # 运行时插件实例数据（UserControl, CommandHandler, Parameters）
-│   │   └── RemotePluginInfo.cs         # 远程插件信息模型（插件管理器用，含下载状态）
+│   │   ├── RemotePluginInfo.cs         # 远程插件信息模型（插件管理器用，含下载状态）
+│   │   └── ToolItem.cs                 # 工具箱工具项模型（ID, Name, Description）
 │   ├── View/UC/
-│   │   └── PerformanceMonitor.xaml/.cs # LiveCharts CPU/内存图表（5秒采样，30秒窗口）
+│   │   ├── PerformanceMonitor.xaml/.cs # LiveCharts CPU/内存图表（5秒采样，30秒窗口）
+│   │   └── Toolbox/                    # 工具箱工具视图（取色器/正则测试/MD5校验 + 区域选框覆盖窗）
 │   ├── Common/
 │   │   ├── Images/Logo.png             # 应用 Logo
 │   │   ├── Images/Logo.ico             # 应用图标（.ico 格式）
@@ -89,7 +93,9 @@ YFrame/
 │       ├── Tools/
 │       │   ├── YF_Manager_Log.cs       # 日志系统（HTML格式，按天/类型分文件，1MB轮转，最多999文件）
 │       │   ├── YF_TcpHelper.cs         # 网络工具（GetLocalIP, GetDefaultGatewayIP）
-│       │   └── YF_FileHelper.cs        # 文件工具（CopyDirectory, SetClipboardWithRetry, OpenFolder）
+│       │   ├── YF_FileHelper.cs        # 文件工具（CopyDirectory, SetClipboardWithRetry, OpenFolder）
+│       │   ├── Md5Hasher.cs            # MD5 哈希工具（字符串/文件分块异步计算 + 双文件对比）
+│       │   └── RegexHelper.cs          # 正则测试辅助（模式校验、选项构建、匹配执行）
 │       ├── YF_RelayCommand.cs          # ICommand实现（无参版 + 泛型版<T>）
 │       └── YF_DelegateFunctionModel.cs # 委托类型声明（dvFunc_Vs, dvFunc_Vs_s）
 │
@@ -106,7 +112,9 @@ YFrame/
 │   │   │   └── Tools/
 │   │   │       ├── YF_FileHelperTests.cs      # 15 个 — 文件系统操作
 │   │   │       ├── YF_TcpHelperTests.cs       # 5 个 — 网络工具
-│   │   │       └── YF_Manager_LogTests.cs     # 8 个 — 日志系统
+│   │   │       ├── YF_Manager_LogTests.cs     # 8 个 — 日志系统
+│   │   │       ├── Md5HasherTests.cs          # 10 个 — MD5 哈希计算
+│   │   │       └── RegexHelperTests.cs        # 11 个 — 正则测试辅助
 │   │   └── Interface/
 │   │       └── PluginEventArgsTests.cs        # 2 个 — 事件参数
 │   ├── YFrame/                         # YFrame 主项目相关测试
@@ -357,7 +365,7 @@ PluginService.OnHotkeyPressedInternal()
 | 面板 | 标签页 | 索引 | 说明 |
 |------|--------|------|------|
 | **左侧面板** | 插件列表 | 0 | VS Code 风格活动栏，垂直旋转文字，选中竖线指示 |
-| **左侧面板** | 工具箱 | 1 | 工具箱内容区（待扩展） |
+| **左侧面板** | 工具箱 | 1 | 内置小工具列表（取色器/正则测试/MD5校验，点击后在主工作区打开） |
 | **右侧面板** | 日志 | 0 | 实时日志输出，支持清除 |
 | **右侧面板** | 参数 | 1 | 参数面板（待扩展） |
 

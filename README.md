@@ -81,7 +81,7 @@
 |------|------|------|------|
 | **YFrame** | WPF Application (`WinExe`) | `YFrame.exe` | 主框架外壳，负责窗口管理、插件加载、主题/语言切换、性能监控 |
 | **YF_Manager** | Class Library (`UseWPF`) | `YF_Manager.dll` | 共享基础设施库，定义插件契约接口、日志系统、AOP 拦截器、命令框架、消息中介 |
-| **YFrame.Tests** | xUnit Test Project | — | 单元测试（94 个用例），覆盖 YF_Manager、YFrame |
+| **YFrame.Tests** | xUnit Test Project | — | 单元测试（115 个用例），覆盖 YF_Manager、YFrame |
 | **YFrame.Installer** | WPF Application (`WinExe`) | `YFrame.Installer.exe` | 框架安装程序，向导式 3 步安装流程，仅安装框架本体（不含插件和 AI 模型），payload.zip 内嵌于 exe |
 
 ### 1.3 依赖关系
@@ -268,22 +268,26 @@ YFrame/
 │   ├── MainWindow.xaml.cs              # 主窗口代码后置（设置 DataContext）
 │   ├── ViewModel/
 │   │   ├── MainWindowViewModel.cs      # 核心 ViewModel（薄门面，AOP）
-│   │   └── PluginManagerViewModel.cs   # 插件管理器 ViewModel（AOP，委托 Service）
+│   │   ├── PluginManagerViewModel.cs   # 插件管理器 ViewModel（AOP，委托 Service）
+│   │   └── Toolbox/                    # 工具箱工具 ViewModel（取色器/正则测试/MD5校验）
 │   ├── Service/                        # 服务层
 │   │   ├── UserControlsService.cs      # 插件加载服务（AOP，反射扫描/加载/实例化）
 │   │   ├── PluginService.cs            # 插件管理服务（切换、命令转发、热键路由）
 │   │   ├── PluginManagerService.cs     # 插件管理器服务（AOP 单例，HTTP 通信、下载/解压）
 │   │   ├── LogService.cs               # 日志面板服务（缓冲区管理、Mediator 订阅）
 │   │   ├── HotkeyService.cs            # 全局热键服务（AOP，Win32 RegisterHotKey）
-│   │   └── TrayIconService.cs          # 托盘图标服务（AOP，Shell_NotifyIcon）
+│   │   ├── TrayIconService.cs          # 托盘图标服务（AOP，Shell_NotifyIcon）
+│   │   └── ToolboxService.cs           # 工具箱工具服务（工具注册表 + 视图工厂缓存）
 │   ├── Model/
 │   │   ├── PluginsModel.cs             # 插件列表项模型
 │   │   ├── CtrlDataModel.cs            # 运行时插件实例数据
 │   │   ├── RemotePluginInfo.cs         # 远程插件信息模型（下载状态、进度）
+│   │   └── ToolItem.cs                 # 工具箱工具项模型（ID、名称、描述）
 │   ├── View/
 │   │   ├── PluginManagerWindow.xaml/.cs  # 插件管理器窗口（连接服务器 + 下载/安装插件）
 │   │   └── UC/
-│   │   └── PerformanceMonitor.xaml/.cs # CPU/内存实时监控图表（LiveCharts）
+│   │       ├── PerformanceMonitor.xaml/.cs # CPU/内存实时监控图表（LiveCharts）
+│   │       └── Toolbox/                  # 工具箱工具视图（取色器/正则测试/MD5校验 + 区域选框覆盖窗）
 │   ├── Common/
 │   │   ├── Images/
 │   │   │   └── Logo.png               # 应用 Logo
@@ -313,7 +317,9 @@ YFrame/
 │       ├── Tools/
 │       │   ├── YF_Manager_Log.cs       # 文件日志系统（HTML 格式、按天/类型分文件、1MB 轮转）
 │       │   ├── YF_TcpHelper.cs         # 网络工具（获取网关 IP、本机 IP）
-│       │   └── YF_FileHelper.cs        # 文件操作助手（目录复制、剪贴板写入重试、资源管理器打开）
+│       │   ├── YF_FileHelper.cs        # 文件操作助手（目录复制、剪贴板写入重试、资源管理器打开）
+│       │   ├── Md5Hasher.cs            # MD5 哈希工具（字符串/文件分块异步计算 + 双文件对比）
+│       │   └── RegexHelper.cs          # 正则测试辅助（模式校验、选项构建、匹配执行）
 │       ├── YF_RelayCommand.cs          # ICommand 实现（无参版 + 泛型版）
 │       └── YF_DelegateFunctionModel.cs # 委托类型声明
 │
@@ -330,7 +336,9 @@ YFrame/
 │   │       └── Tools/
 │   │           ├── YF_FileHelperTests.cs      # 15 个 — 文件系统操作
 │   │           ├── YF_TcpHelperTests.cs       # 5 个 — 网络工具
-│   │           └── YF_Manager_LogTests.cs     # 8 个 — 日志系统
+│   │           ├── YF_Manager_LogTests.cs     # 8 个 — 日志系统
+│   │           ├── Md5HasherTests.cs          # 10 个 — MD5 哈希计算
+│   │           └── RegexHelperTests.cs        # 11 个 — 正则测试辅助
 │   ├── YFrame/                         # YFrame 相关测试
 │   │   ├── Service/
 │   │   │   ├── LogServiceTests.cs      # 14 个 — 日志缓冲区管理
