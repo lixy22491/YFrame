@@ -49,6 +49,54 @@
     </Style>
 
     <!-- ============================================================ -->
+    <!-- 统一复选框样式（文字与勾选框均适配当前主题）               -->
+    <!-- ============================================================ -->
+    <Style TargetType="{x:Type CheckBox}">
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type CheckBox}">
+                    <StackPanel Orientation="Horizontal" Background="Transparent">
+                        <!-- 勾选框 -->
+                        <Border x:Name="Box" Width="15" Height="15" CornerRadius="3"
+                                BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                Background="{DynamicResource BackgroundBrush}" VerticalAlignment="Center">
+                            <Path x:Name="CheckMark" Data="M3,8 L6,11 L12,4"
+                                  Stroke="{DynamicResource TreeItemAccent}" StrokeThickness="2"
+                                  StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                  Visibility="Collapsed"
+                                  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <!-- 文字 -->
+                        <ContentPresenter Margin="6,0,0,0" VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
+                    </StackPanel>
+                    <ControlTemplate.Triggers>
+                        <!-- 勾选：显示对勾 -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="CheckMark" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <!-- 悬停：边框高亮 -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Box" Property="BorderBrush"
+                                    Value="{DynamicResource TreeItemAccent}"/>
+                        </Trigger>
+                        <!-- 禁用：文字变灰 -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource TreeItemSecondaryText}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================================================ -->
     <!-- 统一输入框样式                                                 -->
     <!-- 注意：Padding 放在内容宿主(ScrollViewer)上而非外层Border，      -->
     <!-- 可避免固定高度下文本被垂直裁剪，仅显示上半部分的问题             -->
@@ -75,7 +123,7 @@
                             CornerRadius="3">
                         <ScrollViewer x:Name="PART_ContentHost"
                                       Padding="{TemplateBinding Padding}"
-                                      VerticalAlignment="Center"
+                                      VerticalAlignment="Stretch"
                                       HorizontalAlignment="Stretch"/>
                     </Border>
                     <ControlTemplate.Triggers>

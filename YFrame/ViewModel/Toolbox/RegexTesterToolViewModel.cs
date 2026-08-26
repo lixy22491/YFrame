@@ -162,7 +162,10 @@ namespace YFrame.ViewModel.Toolbox
             }
 
             var options = RegexHelper.BuildOptions(IgnoreCase, Multiline, Singleline, IgnorePatternWhitespace);
-            var results = RegexHelper.MatchAll(Pattern, InputText, options);
+
+            // 将 Windows 换行(\r\n)与旧式换行(\r)归一化为 \n：
+            string normalizedInput = InputText.Replace("\r\n", "\n").Replace('\r', '\n');
+            var results = RegexHelper.MatchAll(Pattern, normalizedInput, options);
 
             foreach (var r in results)
                 Matches.Add(r);
