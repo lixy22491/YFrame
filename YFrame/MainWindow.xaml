@@ -349,17 +349,13 @@
                                     </Style>
                                 </Grid.Style>
                                 <ListBox Style="{StaticResource VsPluginListBox}"
-                                         ItemContainerStyle="{StaticResource VsPluginListItem}"
+                                         ItemContainerStyle="{StaticResource VsToolboxListItem}"
                                          ItemsSource="{Binding Tools}"
                                          SelectedItem="{Binding SelectedTool, Mode=TwoWay}"
                                          Margin="0,2,0,0">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
-                                                <TextBlock Text="{Binding Description}" FontSize="10"
-                                                           Foreground="{DynamicResource TreeItemSecondaryText}"/>
-                                            </StackPanel>
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
