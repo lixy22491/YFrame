@@ -75,9 +75,7 @@
             <MenuItem Header="{DynamicResource key_View}" Foreground="{DynamicResource TextBrush}" >
                 <MenuItem Header="{DynamicResource key_Left sidebar}" IsCheckable="True" IsChecked="True" Command="{Binding ToggleLeftToolWindowCommand}"/>
                 <MenuItem Header="{DynamicResource key_Right sidebar}" IsCheckable="True" IsChecked="True" Command="{Binding ToggleRightToolWindowCommand}"/>
-                <Separator/>
                 <MenuItem Header="{DynamicResource key_FullScreen}" Command="{Binding ToggleFullScreenCommand}"/>
-                <Separator/>
                 <MenuItem Header="{DynamicResource key_DarkGray theme}" Command="{Binding SetThemeCommand}" CommandParameter="Common/Themes/DarkGrayTheme.xaml"/>
                 <MenuItem Header="{DynamicResource key_CreamWhite theme}" Command="{Binding SetThemeCommand}" CommandParameter="Common/Themes/CreamWhiteTheme.xaml"/>
                 <MenuItem Header="{DynamicResource key_LightBlue theme}" Command="{Binding SetThemeCommand}" CommandParameter="Common/Themes/LightBlueTheme.xaml"/>
