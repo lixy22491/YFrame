@@ -15,7 +15,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void BuildOptions_AllOff_ReturnsNone()
         {
-            var options = RegexHelper.BuildOptions(false, false, false, false);
+            var options = YF_RegexHelper.BuildOptions(false, false, false, false);
             Assert.Equal(RegexOptions.None, options);
         }
 
@@ -25,7 +25,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void BuildOptions_Combination_MergesCorrectly()
         {
-            var options = RegexHelper.BuildOptions(true, true, true, true);
+            var options = YF_RegexHelper.BuildOptions(true, true, true, true);
             Assert.True(options.HasFlag(RegexOptions.IgnoreCase));
             Assert.True(options.HasFlag(RegexOptions.Multiline));
             Assert.True(options.HasFlag(RegexOptions.Singleline));
@@ -38,7 +38,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void IsValidPattern_Valid_ReturnsTrue()
         {
-            Assert.True(RegexHelper.IsValidPattern(@"\d+", out string? error));
+            Assert.True(YF_RegexHelper.IsValidPattern(@"\d+", out string? error));
             Assert.Null(error);
         }
 
@@ -49,7 +49,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         public void IsValidPattern_Invalid_ReturnsFalseWithError()
         {
             // "[" 是未闭合字符类，属于非法模式
-            Assert.False(RegexHelper.IsValidPattern("[", out string? error));
+            Assert.False(YF_RegexHelper.IsValidPattern("[", out string? error));
             Assert.False(string.IsNullOrEmpty(error));
         }
 
@@ -59,7 +59,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void IsValidPattern_Empty_ReturnsFalse()
         {
-            Assert.False(RegexHelper.IsValidPattern("", out _));
+            Assert.False(YF_RegexHelper.IsValidPattern("", out _));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void MatchAll_Basic_ReturnsAllMatches()
         {
-            var results = RegexHelper.MatchAll(@"\d+", "a1 b22 c333", RegexOptions.None);
+            var results = YF_RegexHelper.MatchAll(@"\d+", "a1 b22 c333", RegexOptions.None);
             Assert.Equal(3, results.Count);
             Assert.Equal("1", results[0].Value);
             Assert.Equal(1, results[0].Index);
@@ -82,8 +82,8 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void MatchAll_IgnoreCase_MatchesCaseInsensitive()
         {
-            var options = RegexHelper.BuildOptions(ignoreCase: true, multiline: false, singleline: false, ignorePatternWhitespace: false);
-            var results = RegexHelper.MatchAll("hello", "Hello HELLO hello", options);
+            var options = YF_RegexHelper.BuildOptions(ignoreCase: true, multiline: false, singleline: false, ignorePatternWhitespace: false);
+            var results = YF_RegexHelper.MatchAll("hello", "Hello HELLO hello", options);
             Assert.Equal(3, results.Count);
         }
 
@@ -93,8 +93,8 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void MatchAll_Multiline_AnchorsPerLine()
         {
-            var options = RegexHelper.BuildOptions(false, multiline: true, false, false);
-            var results = RegexHelper.MatchAll("^abc", "abc\nabc\nxyz", options);
+            var options = YF_RegexHelper.BuildOptions(false, multiline: true, false, false);
+            var results = YF_RegexHelper.MatchAll("^abc", "abc\nabc\nxyz", options);
             Assert.Equal(2, results.Count);
         }
 
@@ -104,7 +104,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void MatchAll_NoMatch_ReturnsEmpty()
         {
-            var results = RegexHelper.MatchAll(@"\d+", "无数字", RegexOptions.None);
+            var results = YF_RegexHelper.MatchAll(@"\d+", "无数字", RegexOptions.None);
             Assert.Empty(results);
         }
 
@@ -114,7 +114,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void MatchAll_InvalidPattern_ReturnsEmptyWithoutThrow()
         {
-            var results = RegexHelper.MatchAll("[", "some text", RegexOptions.None);
+            var results = YF_RegexHelper.MatchAll("[", "some text", RegexOptions.None);
             Assert.Empty(results);
         }
 
@@ -124,8 +124,8 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void MatchAll_EmptyInputOrPattern_ReturnsEmpty()
         {
-            Assert.Empty(RegexHelper.MatchAll("", "text", RegexOptions.None));
-            Assert.Empty(RegexHelper.MatchAll("\\d+", "", RegexOptions.None));
+            Assert.Empty(YF_RegexHelper.MatchAll("", "text", RegexOptions.None));
+            Assert.Empty(YF_RegexHelper.MatchAll("\\d+", "", RegexOptions.None));
         }
     }
 }

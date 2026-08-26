@@ -154,18 +154,18 @@ namespace YFrame.ViewModel.Toolbox
             OnPropertyChanged(nameof(MatchSummary));
 
             // 先校验模式是否合法
-            if (!RegexHelper.IsValidPattern(Pattern, out string? errorMessage))
+            if (!YF_RegexHelper.IsValidPattern(Pattern, out string? errorMessage))
             {
                 StatusText = RF("key_Toolbox_RegexInvalid", errorMessage ?? "Invalid");
                 StatusBrush = Brushes.Red;
                 return;
             }
 
-            var options = RegexHelper.BuildOptions(IgnoreCase, Multiline, Singleline, IgnorePatternWhitespace);
+            var options = YF_RegexHelper.BuildOptions(IgnoreCase, Multiline, Singleline, IgnorePatternWhitespace);
 
             // 将 Windows 换行(\r\n)与旧式换行(\r)归一化为 \n：
             string normalizedInput = InputText.Replace("\r\n", "\n").Replace('\r', '\n');
-            var results = RegexHelper.MatchAll(Pattern, normalizedInput, options);
+            var results = YF_RegexHelper.MatchAll(Pattern, normalizedInput, options);
 
             foreach (var r in results)
                 Matches.Add(r);

@@ -19,8 +19,8 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void ComputeString_EmptyOrNull_ReturnsEmpty()
         {
-            Assert.Equal(string.Empty, Md5Hasher.ComputeString(""));
-            Assert.Equal(string.Empty, Md5Hasher.ComputeString(null!));
+            Assert.Equal(string.Empty, YF_Md5Hasher.ComputeString(""));
+            Assert.Equal(string.Empty, YF_Md5Hasher.ComputeString(null!));
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         [Fact]
         public void ComputeString_KnownValue_Matches()
         {
-            Assert.Equal(AbcMd5, Md5Hasher.ComputeString("abc"));
+            Assert.Equal(AbcMd5, YF_Md5Hasher.ComputeString("abc"));
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         public void ComputeString_Unicode_IsStable()
         {
             string content = "你好，YFrame";
-            Assert.Equal(Md5Hasher.ComputeString(content), Md5Hasher.ComputeString(content));
+            Assert.Equal(YF_Md5Hasher.ComputeString(content), YF_Md5Hasher.ComputeString(content));
         }
 
         /// <summary>
@@ -52,8 +52,8 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
             try
             {
                 File.WriteAllText(path, "测试文件内容 test content 12345");
-                string h1 = await Md5Hasher.ComputeFileAsync(path);
-                string h2 = await Md5Hasher.ComputeFileAsync(path);
+                string h1 = await YF_Md5Hasher.ComputeFileAsync(path);
+                string h2 = await YF_Md5Hasher.ComputeFileAsync(path);
                 Assert.Equal(h1, h2);
                 Assert.Equal(32, h1.Length);
             }
@@ -76,7 +76,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
                 // 2MB 内容，触发多次 1MB 分块读取
                 File.WriteAllText(path, new string('x', 2 * 1024 * 1024));
                 var progress = new Progress<double>(p => last = p);
-                string hash = await Md5Hasher.ComputeFileAsync(path, progress);
+                string hash = await YF_Md5Hasher.ComputeFileAsync(path, progress);
                 Assert.Equal(1.0, last, 3);
                 Assert.Equal(32, hash.Length);
             }
@@ -93,7 +93,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
         public async Task ComputeFileAsync_MissingFile_Throws()
         {
             string missing = Path.Combine(Path.GetTempPath(), $"missing_{System.Guid.NewGuid():N}.bin");
-            await Assert.ThrowsAsync<FileNotFoundException>(() => Md5Hasher.ComputeFileAsync(missing));
+            await Assert.ThrowsAsync<FileNotFoundException>(() => YF_Md5Hasher.ComputeFileAsync(missing));
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
             {
                 File.WriteAllText(a, "相同内容");
                 File.WriteAllText(b, "相同内容");
-                Assert.True(Md5Hasher.AreFilesEqual(a, b));
+                Assert.True(YF_Md5Hasher.AreFilesEqual(a, b));
             }
             finally
             {
@@ -129,7 +129,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
             {
                 File.WriteAllText(a, "内容A");
                 File.WriteAllText(b, "内容B");
-                Assert.False(Md5Hasher.AreFilesEqual(a, b));
+                Assert.False(YF_Md5Hasher.AreFilesEqual(a, b));
             }
             finally
             {
@@ -150,7 +150,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
             {
                 File.WriteAllText(a, "AAAA");
                 File.WriteAllText(b, "BBBB");
-                Assert.False(Md5Hasher.AreFilesEqual(a, b));
+                Assert.False(YF_Md5Hasher.AreFilesEqual(a, b));
             }
             finally
             {
@@ -170,7 +170,7 @@ namespace YFrame.Tests.YF_Manager.Common.Tools
             {
                 File.WriteAllText(a, "x");
                 string missing = Path.Combine(Path.GetTempPath(), $"missing_{System.Guid.NewGuid():N}.bin");
-                Assert.False(Md5Hasher.AreFilesEqual(a, missing));
+                Assert.False(YF_Md5Hasher.AreFilesEqual(a, missing));
             }
             finally
             {

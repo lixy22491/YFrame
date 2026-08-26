@@ -29,7 +29,7 @@ namespace YF_Manager
     /// 正则表达式测试辅助工具，封装模式校验、选项构建与匹配执行逻辑，
     /// 供正则测试工具箱界面使用，同时方便单元测试。
     /// </summary>
-    public static class RegexHelper
+    public static class YF_RegexHelper
     {
         /// <summary>
         /// 构建正则选项组合

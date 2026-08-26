@@ -12,7 +12,7 @@ namespace YF_Manager
     /// 文件采用分块异步读取，可实时报告进度并支持取消，
     /// 同时提供双文件 MD5 对比（用于文件版本/内容一致性校验）。
     /// </summary>
-    public static class Md5Hasher
+    public static class YF_Md5Hasher
     {
         /// <summary>
         /// 文件读取缓冲区大小（1MB），兼顾大文件性能与内存占用

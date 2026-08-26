@@ -120,6 +120,7 @@ plugins/                       所有插件项目
 | **性能监视器边框** | LiveCharts 图表区域带边框视觉分隔 |
 | **全局热键监控** | 框架统一管理 Ctrl+Y 热键，工具栏一键启停 + 状态栏状态显示 |
 | **日志面板管理** | 支持清除日志面板、一键打开日志文件夹 |
+| **工具箱（内置小工具）** | 左侧工具箱面板提供内置工具，点击后在主工作区叠加打开（不清空插件区）：屏幕取色器（框选截图 → 点击缩略图取色，屏幕缩放 100-200 可调）、正则表达式测试（选项 + 匹配结果，多行锚点自动适配换行）、MD5 文件校验（单文件哈希 / 双文件版本对比） |
 
 ---
 
@@ -296,7 +297,8 @@ YFrame/
 │   │   │   ├── CreamWhiteTheme.xaml    # 素火明昼（暖白柔和，#FFF5F5F8）
 │   │   │   ├── LightBlueTheme.xaml     # 冰火深蓝（深海蓝，#0B1526）
 │   │   │   ├── GreenWhiteTheme.xaml    # 翠火青绿（暗绿基色，#0A1410）
-│   │   │   └── ControlStyles.xaml      # 全局控件统一样式（Button / TextBox / Label）
+│   │   │   └── ControlStyles.xaml      # 全局控件统一样式（Button / TextBox / CheckBox / ComboBox / Label）
+│   │   ├── Tools/ScreenCaptureHelper.cs # 屏幕区域截图帮助类（P/Invoke BitBlt，供取色器框选截图）
 │   │   └── Language/
 │   │       ├── zh-CN.xaml              # 简体中文字符串资源
 │   │       └── en-US.xaml              # 英文字符串资源
@@ -308,7 +310,7 @@ YFrame/
 │   │   ├── I_YF_Detail.cs              # 插件元数据接口（YF_ID, YF_Name）
 │   │   └── I_YF_Command.cs             # 插件命令接口（ExecuteCommand, OnPluginCallback）
 │   └── Common/
-│       ├── Config.cs                   # 全局常量（日志路径、插件路径、TCP 端口、插件服务器端口等）
+│       ├── Config.cs                   # 全局常量（日志路径、插件路径、TCP 端口、插件服务器端口、屏幕缩放等）
 │       ├── YF_ConfigHelper.cs          # 配置文件读写助手（Config/config.conf 键值对持久化）
 │       ├── Attributes/
 │       │   └── LogAttribute.cs         # [Log] 自定义特性（Level + Message）
@@ -318,8 +320,8 @@ YFrame/
 │       │   ├── YF_Manager_Log.cs       # 文件日志系统（HTML 格式、按天/类型分文件、1MB 轮转）
 │       │   ├── YF_TcpHelper.cs         # 网络工具（获取网关 IP、本机 IP）
 │       │   ├── YF_FileHelper.cs        # 文件操作助手（目录复制、剪贴板写入重试、资源管理器打开）
-│       │   ├── Md5Hasher.cs            # MD5 哈希工具（字符串/文件分块异步计算 + 双文件对比）
-│       │   └── RegexHelper.cs          # 正则测试辅助（模式校验、选项构建、匹配执行）
+│       │   ├── YF_Md5Hasher.cs         # MD5 哈希工具（字符串/文件分块异步计算 + 双文件对比）
+│       │   └── YF_RegexHelper.cs       # 正则测试辅助（模式校验、选项构建、匹配执行）
 │       ├── YF_RelayCommand.cs          # ICommand 实现（无参版 + 泛型版）
 │       └── YF_DelegateFunctionModel.cs # 委托类型声明
 │

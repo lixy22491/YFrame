@@ -273,11 +273,11 @@ namespace YFrame.ViewModel.Toolbox
 
             try
             {
-                FileAHash = await Md5Hasher.ComputeFileAsync(FileAPath, progress);
+                FileAHash = await YF_Md5Hasher.ComputeFileAsync(FileAPath, progress);
 
                 if (hasFileB)
                 {
-                    FileBHash = await Md5Hasher.ComputeFileAsync(FileBPath, progress);
+                    FileBHash = await YF_Md5Hasher.ComputeFileAsync(FileBPath, progress);
 
                     // 双文件对比（不区分大小写）
                     bool isEqual = string.Equals(FileAHash, FileBHash, StringComparison.OrdinalIgnoreCase);

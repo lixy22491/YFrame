@@ -86,6 +86,7 @@
                 <ComboBox ItemsSource="{Binding ScreenScaleOptions}"
                           Text="{Binding ScreenScaleText, UpdateSourceTrigger=LostFocus}"
                           IsEditable="True" Width="72" Margin="6,0"
+                          PreviewMouseLeftButtonDown="OnScaleComboPreviewMouseLeftButtonDown"
                           VerticalContentAlignment="Center"/>
                 <TextBlock Text="{DynamicResource key_Toolbox_ScaleUnit}"
                            Foreground="{DynamicResource TreeItemSecondaryText}" VerticalAlignment="Center"/>

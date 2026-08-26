@@ -117,5 +117,19 @@ namespace YFrame.View.UC.Toolbox
             if (srcX >= 0 && srcY >= 0 && srcX < srcW && srcY < srcH)
                 vm.PickColorAt(srcX, srcY);
         }
+
+        /// <summary>
+        /// 可编辑下拉框点击主体区域时也弹出下拉列表：
+        /// WPF 默认仅点击右侧箭头（底部）才打开下拉，点击主体会进入文本编辑，
+        /// 此处拦截点击并直接展开下拉列表，改善交互体验
+        /// </summary>
+        private void OnScaleComboPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is ComboBox combo && combo.IsEditable && !combo.IsDropDownOpen)
+            {
+                combo.IsDropDownOpen = true;
+                e.Handled = true;
+            }
+        }
     }
 }
