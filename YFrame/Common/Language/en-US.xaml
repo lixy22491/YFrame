@@ -74,6 +74,56 @@
     <sys:String x:Key="key_HotkeyStatusLabel">Hotkey Ctrl+Y: </sys:String>
     <sys:String x:Key="key_ToolboxContent">Toolbox content (TBD)</sys:String>
 
+    <!--Toolbox-->
+    <sys:String x:Key="key_Toolbox_ColorPicker">Color Picker</sys:String>
+    <sys:String x:Key="key_Toolbox_ColorPickerDesc">Pick pixel color from anywhere on screen</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexTester">Regex Tester</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexTesterDesc">Write and validate regex patterns</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Compare">MD5 File Check</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5CompareDesc">Compute MD5 and compare two files</sys:String>
+    <sys:String x:Key="key_Toolbox_ColorHex">HEX:</sys:String>
+    <sys:String x:Key="key_Toolbox_ColorRgb">RGB:</sys:String>
+    <sys:String x:Key="key_Toolbox_ColorPos">Pos:</sys:String>
+    <sys:String x:Key="key_Toolbox_ScaleLabel">Screen Scale:</sys:String>
+    <sys:String x:Key="key_Toolbox_ScaleUnit">%</sys:String>
+    <sys:String x:Key="key_Toolbox_Copy">📋 Copy</sys:String>
+    <sys:String x:Key="key_Toolbox_StartPick">Start Pick</sys:String>
+    <sys:String x:Key="key_Toolbox_OverlayHint">Drag to select a region · ESC to cancel</sys:String>
+    <sys:String x:Key="key_Toolbox_SnapshotHint">Click the snapshot to pick color</sys:String>
+    <sys:String x:Key="key_Toolbox_NoSnapshot">Click "Start Pick" to select a screen region</sys:String>
+    <sys:String x:Key="key_Toolbox_PickHint">Select a region, then click the snapshot to pick color</sys:String>
+    <sys:String x:Key="key_Toolbox_History">Pick History</sys:String>
+    <sys:String x:Key="key_Toolbox_ClearHistory">Clear</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexPattern">Pattern:</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexIgnoreCase">Ignore Case</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexMultiline">Multiline</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexSingleline">Singleline</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexIgnoreWS">Ignore Whitespace</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexInput">Test Input:</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexTest">Test</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexMatches">Matches:</sys:String>
+    <sys:String x:Key="key_Toolbox_Clear">Clear</sys:String>
+    <sys:String x:Key="key_Toolbox_FileA">File A</sys:String>
+    <sys:String x:Key="key_Toolbox_FileB">File B</sys:String>
+    <sys:String x:Key="key_Toolbox_Browse">Browse...</sys:String>
+    <sys:String x:Key="key_Toolbox_ComputeMd5">Compute MD5</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5A">File A MD5</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5B">File B MD5</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Hint">Tip: select two files and compute to compare whether they are identical (version check). Files can be dragged into the path boxes.</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexInit">Enter a pattern and test input, then click Test</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexInvalid">Invalid pattern: {0}</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexMatchSummary">{0} match(es)</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexSuccess">Matched, {0} in total</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexNoMatch">No match found</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Init">Select a file then click Compute MD5</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5NeedFileA">Please select a valid first file</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Computing">Computing...</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Ready">Click Compute MD5</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Equal">✔ Identical: the two files have the same content (same MD5)</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Diff">✘ Different: the two files have different content (different MD5)</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Done">Done: MD5 of {0} is shown below</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Failed">Failed: {0}</sys:String>
+
     <!--性能监视器-->
     <sys:String x:Key="key_UsagePercent">Usage (%)</sys:String>
     <sys:String x:Key="key_Time">Time</sys:String>
@@ -92,6 +142,7 @@
     <sys:String x:Key="key_Clicker_Hint_Count">Range: 10~10000 clicks</sys:String>
     <sys:String x:Key="key_Clicker_Start">Start Click</sys:String>
     <sys:String x:Key="key_Clicker_Stop">Stop Click</sys:String>
+    <sys:String x:Key="key_Clicker_LogTitle">Run Log</sys:String>
     <sys:String x:Key="key_Clicker_HotkeyHint">Framework Hotkey: Ctrl+Y toggles clicker</sys:String>
 
     <!--脚本编辑器-->

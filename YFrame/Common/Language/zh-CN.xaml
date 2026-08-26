@@ -74,6 +74,56 @@
     <sys:String x:Key="key_HotkeyStatusLabel">热键Ctrl+Y: </sys:String>
     <sys:String x:Key="key_ToolboxContent">工具箱内容（待添加）</sys:String>
 
+    <!--工具箱-->
+    <sys:String x:Key="key_Toolbox_ColorPicker">屏幕取色器</sys:String>
+    <sys:String x:Key="key_Toolbox_ColorPickerDesc">拾取屏幕任意位置像素颜色</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexTester">正则表达式测试</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexTesterDesc">编写并验证正则表达式匹配</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Compare">MD5 文件校验</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5CompareDesc">计算文件 MD5 并对比两个文件</sys:String>
+    <sys:String x:Key="key_Toolbox_ColorHex">HEX:</sys:String>
+    <sys:String x:Key="key_Toolbox_ColorRgb">RGB:</sys:String>
+    <sys:String x:Key="key_Toolbox_ColorPos">坐标:</sys:String>
+    <sys:String x:Key="key_Toolbox_ScaleLabel">屏幕缩放:</sys:String>
+    <sys:String x:Key="key_Toolbox_ScaleUnit">%</sys:String>
+    <sys:String x:Key="key_Toolbox_Copy">📋 复制</sys:String>
+    <sys:String x:Key="key_Toolbox_StartPick">开始拾取</sys:String>
+    <sys:String x:Key="key_Toolbox_OverlayHint">拖拽框选截图区域 · ESC 取消</sys:String>
+    <sys:String x:Key="key_Toolbox_SnapshotHint">点击截图即可取色</sys:String>
+    <sys:String x:Key="key_Toolbox_NoSnapshot">点击「开始拾取」框选屏幕区域</sys:String>
+    <sys:String x:Key="key_Toolbox_PickHint">框选区域截图，然后点击截图取色</sys:String>
+    <sys:String x:Key="key_Toolbox_History">取色历史</sys:String>
+    <sys:String x:Key="key_Toolbox_ClearHistory">清空</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexPattern">正则表达式:</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexIgnoreCase">忽略大小写</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexMultiline">多行</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexSingleline">单行</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexIgnoreWS">忽略空白</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexInput">测试文本:</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexTest">测试</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexMatches">匹配结果:</sys:String>
+    <sys:String x:Key="key_Toolbox_Clear">清空</sys:String>
+    <sys:String x:Key="key_Toolbox_FileA">文件 A</sys:String>
+    <sys:String x:Key="key_Toolbox_FileB">文件 B</sys:String>
+    <sys:String x:Key="key_Toolbox_Browse">浏览...</sys:String>
+    <sys:String x:Key="key_Toolbox_ComputeMd5">计算 MD5</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5A">文件 A MD5</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5B">文件 B MD5</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Hint">提示：选择两个文件后计算，可对比两份文件内容/版本是否一致；支持拖拽文件到路径框。</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexInit">输入正则表达式与测试文本后点击「测试」</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexInvalid">正则表达式不合法：{0}</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexMatchSummary">共 {0} 处匹配</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexSuccess">匹配成功，共 {0} 处</sys:String>
+    <sys:String x:Key="key_Toolbox_RegexNoMatch">未找到匹配项</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Init">请选择文件后点击「计算 MD5」</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5NeedFileA">请先选择有效的第一个文件</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Computing">正在计算...</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Ready">请点击「计算 MD5」</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Equal">✔ 一致：两个文件内容相同（MD5 相同）</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Diff">✘ 不一致：两个文件内容不同（MD5 不同）</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Done">计算完成：{0} 的 MD5 如下</sys:String>
+    <sys:String x:Key="key_Toolbox_Md5Failed">计算失败：{0}</sys:String>
+
     <!--性能监视器-->
     <sys:String x:Key="key_UsagePercent">使用率 (%)</sys:String>
     <sys:String x:Key="key_Time">时间</sys:String>
@@ -92,6 +142,7 @@
     <sys:String x:Key="key_Clicker_Hint_Count">范围：10~10000 次</sys:String>
     <sys:String x:Key="key_Clicker_Start">开始点击</sys:String>
     <sys:String x:Key="key_Clicker_Stop">停止点击</sys:String>
+    <sys:String x:Key="key_Clicker_LogTitle">运行记录</sys:String>
     <sys:String x:Key="key_Clicker_HotkeyHint">框架热键：Ctrl+Y 切换连点器启停</sys:String>
 
     <!--脚本编辑器-->

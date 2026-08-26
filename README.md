@@ -81,7 +81,7 @@
 |------|------|------|------|
 | **YFrame** | WPF Application (`WinExe`) | `YFrame.exe` | 主框架外壳，负责窗口管理、插件加载、主题/语言切换、性能监控 |
 | **YF_Manager** | Class Library (`UseWPF`) | `YF_Manager.dll` | 共享基础设施库，定义插件契约接口、日志系统、AOP 拦截器、命令框架、消息中介 |
-| **YFrame.Tests** | xUnit Test Project | — | 单元测试（94 个用例），覆盖 YF_Manager、YFrame |
+| **YFrame.Tests** | xUnit Test Project | — | 单元测试（115 个用例），覆盖 YF_Manager、YFrame |
 | **YFrame.Installer** | WPF Application (`WinExe`) | `YFrame.Installer.exe` | 框架安装程序，向导式 3 步安装流程，仅安装框架本体（不含插件和 AI 模型），payload.zip 内嵌于 exe |
 
 ### 1.3 依赖关系
@@ -120,6 +120,7 @@ plugins/                       所有插件项目
 | **性能监视器边框** | LiveCharts 图表区域带边框视觉分隔 |
 | **全局热键监控** | 框架统一管理 Ctrl+Y 热键，工具栏一键启停 + 状态栏状态显示 |
 | **日志面板管理** | 支持清除日志面板、一键打开日志文件夹 |
+| **工具箱（内置小工具）** | 左侧工具箱面板提供内置工具，点击后在主工作区叠加打开（不清空插件区）：屏幕取色器（框选截图 → 点击缩略图取色，屏幕缩放 100-200 可调）、正则表达式测试（选项 + 匹配结果，多行锚点自动适配换行）、MD5 文件校验（单文件哈希 / 双文件版本对比） |
 
 ---
 
@@ -134,7 +135,7 @@ plugins/                       所有插件项目
 | **依赖注入 (DI)** | `App.xaml.cs` DI 容器 + 全部 6 个服务 | 消除 `XXX.Instance` 硬编码，松耦合，可单元测试 |
 | **属性注入** | `MainWindowViewModel`、`UserControlsService` | 兼容 Castle `CreateClassProxy` 无参构造要求 |
 | **代理模式 (Proxy) / AOP** | `LogInterceptor` + Castle.Core `ProxyGenerator` | 在不修改业务代码的前提下，透明地注入日志记录逻辑 |
-| **观察者模式 (Observer)** | `INotifyPropertyChanged` + 数据绑定、`OnPluginCallback` 事件 | View 与 ViewModel 解耦；插件向宿主回传数据 |
+| **观察者模式 (Observer)** | `ViewModelBase`（实现 `INotifyPropertyChanged`）+ 数据绑定、`OnPluginCallback` 事件 | View 与 ViewModel 解耦；插件向宿主回传数据 |
 | **命令模式 (Command)** | `YF_RelayCommand` / `YF_RelayCommand<T>` | 将 UI 操作抽象为可绑定、可测试的命令对象 |
 | **策略模式 (Strategy)** | 主题切换（`ResourceDictionary` 替换）、语言切换 | 运行时动态替换行为（外观/文本），无需修改代码 |
 | **工厂模式 (Factory)** | `UserControlsService.TryLoadPlugin()` 反射创建实例 | 根据运行时发现的类型信息动态创建插件实例 |
@@ -196,7 +197,7 @@ services.AddSingleton(sp => {
            │  DataContext = MainWindowViewModel.Instance
 ┌──────────▼───────────┐
 │    ViewModel         │
-│  · INotifyPropertyChanged │ → 属性变更通知 View
+│  · ViewModelBase          │ → 属性变更通知 View（继承基类）
 │  · ICommand (RelayCommand)│ → 处理 View 的用户操作
 │  · 业务逻辑              │ → 调用 Service 层
 └──────────┬───────────┘
@@ -268,22 +269,26 @@ YFrame/
 │   ├── MainWindow.xaml.cs              # 主窗口代码后置（设置 DataContext）
 │   ├── ViewModel/
 │   │   ├── MainWindowViewModel.cs      # 核心 ViewModel（薄门面，AOP）
-│   │   └── PluginManagerViewModel.cs   # 插件管理器 ViewModel（AOP，委托 Service）
+│   │   ├── PluginManagerViewModel.cs   # 插件管理器 ViewModel（AOP，委托 Service）
+│   │   └── Toolbox/                    # 工具箱工具 ViewModel（取色器/正则测试/MD5校验）
 │   ├── Service/                        # 服务层
 │   │   ├── UserControlsService.cs      # 插件加载服务（AOP，反射扫描/加载/实例化）
 │   │   ├── PluginService.cs            # 插件管理服务（切换、命令转发、热键路由）
 │   │   ├── PluginManagerService.cs     # 插件管理器服务（AOP 单例，HTTP 通信、下载/解压）
 │   │   ├── LogService.cs               # 日志面板服务（缓冲区管理、Mediator 订阅）
 │   │   ├── HotkeyService.cs            # 全局热键服务（AOP，Win32 RegisterHotKey）
-│   │   └── TrayIconService.cs          # 托盘图标服务（AOP，Shell_NotifyIcon）
+│   │   ├── TrayIconService.cs          # 托盘图标服务（AOP，Shell_NotifyIcon）
+│   │   └── ToolboxService.cs           # 工具箱工具服务（工具注册表 + 视图工厂缓存）
 │   ├── Model/
 │   │   ├── PluginsModel.cs             # 插件列表项模型
 │   │   ├── CtrlDataModel.cs            # 运行时插件实例数据
 │   │   ├── RemotePluginInfo.cs         # 远程插件信息模型（下载状态、进度）
+│   │   └── ToolItem.cs                 # 工具箱工具项模型（ID、名称、描述）
 │   ├── View/
 │   │   ├── PluginManagerWindow.xaml/.cs  # 插件管理器窗口（连接服务器 + 下载/安装插件）
 │   │   └── UC/
-│   │   └── PerformanceMonitor.xaml/.cs # CPU/内存实时监控图表（LiveCharts）
+│   │       ├── PerformanceMonitor.xaml/.cs # CPU/内存实时监控图表（LiveCharts）
+│   │       └── Toolbox/                  # 工具箱工具视图（取色器/正则测试/MD5校验 + 区域选框覆盖窗）
 │   ├── Common/
 │   │   ├── Images/
 │   │   │   └── Logo.png               # 应用 Logo
@@ -292,18 +297,20 @@ YFrame/
 │   │   │   ├── CreamWhiteTheme.xaml    # 素火明昼（暖白柔和，#FFF5F5F8）
 │   │   │   ├── LightBlueTheme.xaml     # 冰火深蓝（深海蓝，#0B1526）
 │   │   │   ├── GreenWhiteTheme.xaml    # 翠火青绿（暗绿基色，#0A1410）
-│   │   │   └── ControlStyles.xaml      # 全局控件统一样式（Button / TextBox / Label）
+│   │   │   └── ControlStyles.xaml      # 全局控件统一样式（Button / TextBox / CheckBox / ComboBox / Label）
+│   │   ├── Tools/ScreenCaptureHelper.cs # 屏幕区域截图帮助类（P/Invoke BitBlt，供取色器框选截图）
 │   │   └── Language/
 │   │       ├── zh-CN.xaml              # 简体中文字符串资源
 │   │       └── en-US.xaml              # 英文字符串资源
 │
 ├── YF_Manager/                         # 共享框架库 (Class Library)
 │   ├── YF_Manager.cs                   # 静态入口类（持有静态 logger 实例）
+│   ├── BaseClass/ViewModelBase.cs      # 基类 ViewModel（实现 INotifyPropertyChanged + SetProperty）
 │   ├── Interface/
 │   │   ├── I_YF_Detail.cs              # 插件元数据接口（YF_ID, YF_Name）
 │   │   └── I_YF_Command.cs             # 插件命令接口（ExecuteCommand, OnPluginCallback）
 │   └── Common/
-│       ├── Config.cs                   # 全局常量（日志路径、插件路径、TCP 端口、插件服务器端口等）
+│       ├── Config.cs                   # 全局常量（日志路径、插件路径、TCP 端口、插件服务器端口、屏幕缩放等）
 │       ├── YF_ConfigHelper.cs          # 配置文件读写助手（Config/config.conf 键值对持久化）
 │       ├── Attributes/
 │       │   └── LogAttribute.cs         # [Log] 自定义特性（Level + Message）
@@ -312,7 +319,9 @@ YFrame/
 │       ├── Tools/
 │       │   ├── YF_Manager_Log.cs       # 文件日志系统（HTML 格式、按天/类型分文件、1MB 轮转）
 │       │   ├── YF_TcpHelper.cs         # 网络工具（获取网关 IP、本机 IP）
-│       │   └── YF_FileHelper.cs        # 文件操作助手（目录复制、剪贴板写入重试、资源管理器打开）
+│       │   ├── YF_FileHelper.cs        # 文件操作助手（目录复制、剪贴板写入重试、资源管理器打开）
+│       │   ├── YF_Md5Hasher.cs         # MD5 哈希工具（字符串/文件分块异步计算 + 双文件对比）
+│       │   └── YF_RegexHelper.cs       # 正则测试辅助（模式校验、选项构建、匹配执行）
 │       ├── YF_RelayCommand.cs          # ICommand 实现（无参版 + 泛型版）
 │       └── YF_DelegateFunctionModel.cs # 委托类型声明
 │
@@ -329,13 +338,15 @@ YFrame/
 │   │       └── Tools/
 │   │           ├── YF_FileHelperTests.cs      # 15 个 — 文件系统操作
 │   │           ├── YF_TcpHelperTests.cs       # 5 个 — 网络工具
-│   │           └── YF_Manager_LogTests.cs     # 8 个 — 日志系统
+│   │           ├── YF_Manager_LogTests.cs     # 8 个 — 日志系统
+│   │           ├── Md5HasherTests.cs          # 10 个 — MD5 哈希计算
+│   │           └── RegexHelperTests.cs        # 11 个 — 正则测试辅助
 │   ├── YFrame/                         # YFrame 相关测试
 │   │   ├── Service/
 │   │   │   ├── LogServiceTests.cs      # 14 个 — 日志缓冲区管理
 │   │   │   └── PluginServiceTests.cs   # 20 个 — 插件调度、命令路由
 │   │   └── Model/
-│   │       ├── PluginsModelTests.cs    # 8 个 — INotifyPropertyChanged
+│   │       ├── PluginsModelTests.cs    # 8 个 — ViewModelBase 属性通知
 │   │       └── CtrlDataModelTests.cs   # 5 个 — 插件实例数据模型
 │   └── Plugins/KMScript/
 │       └── ScriptInterpreterTests.cs   # 34 个 — DSL 脚本解析
@@ -954,7 +965,7 @@ git push → GitCode Actions/Pipeline 自动触发
 - `PluginServerService` 扫描 `plugins/` 目录，反射读取 `I_YF_Detail` 获取插件元数据
 - ZIP 打包使用 `System.IO.Compression.ZipFile`
 - 端口配置持久化到 `Config/config.conf`（`PluginServerPort` 键）
-- ViewModel 通过 `INotifyPropertyChanged` 驱动 UI，支持服务器启停、插件列表刷新、URL 复制
+- ViewModel 通过 `ViewModelBase`（实现 `INotifyPropertyChanged`）驱动 UI，支持服务器启停、插件列表刷新、URL 复制
 
 **UI 功能：**
 - 本机 IP 自动获取 + 端口配置（读写配置文件）

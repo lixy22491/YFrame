@@ -99,6 +99,9 @@ namespace YFrame
                 new ProxyGenerator().CreateClassProxy<TrayIconService>(new LogInterceptor())
             );
 
+            // ToolboxService：工具箱工具注册表（普通单例，无 AOP 需求）
+            services.AddSingleton<ToolboxService>();
+
             // ===== MainWindowViewModel：AOP 代理 + 全部依赖注入 =====
             services.AddSingleton(sp =>
             {
@@ -129,7 +132,8 @@ namespace YFrame
                     hotkeyService,
                     trayIconService,
                     messenger,
-                    fileHelper
+                    fileHelper,
+                    sp.GetRequiredService<ToolboxService>()
                 );
 
                 return proxy;

@@ -1,0 +1,134 @@
+<UserControl x:Class="YFrame.View.UC.Toolbox.ColorPickerTool"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="460" d:DesignWidth="720">
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 左：取色主区 -->
+        <StackPanel Grid.Column="0">
+            <!-- 左上：截图缩略图（点击取色） -->
+            <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="6"
+                    Padding="4" HorizontalAlignment="Left">
+                <Grid>
+                    <Image x:Name="SnapshotImage"
+                           Source="{Binding Snapshot}"
+                           Stretch="Uniform"
+                           MaxWidth="300" MaxHeight="200"
+                           Cursor="Hand"
+                           MouseLeftButtonDown="OnSnapshotMouseDown"/>
+                    <!-- 无截图时的占位提示（IsSnapshotVisible=False 时显示） -->
+                    <Border Background="{DynamicResource BackgroundBrush}" CornerRadius="4">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsSnapshotVisible}" Value="False">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="{DynamicResource key_Toolbox_NoSnapshot}"
+                                   Foreground="{DynamicResource TreeItemSecondaryText}"
+                                   FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+            <!-- 点击取色提示 -->
+            <TextBlock Text="{DynamicResource key_Toolbox_SnapshotHint}"
+                       Foreground="{DynamicResource TreeItemSecondaryText}" FontSize="11"
+                       Margin="2,6,0,0">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSnapshotVisible}" Value="True">
+                                <Setter Property="Visibility" Value="Visible"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+
+            <!-- 颜色预览色块 -->
+            <Border Height="80" CornerRadius="8" Margin="0,14,0,0"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                    Background="{Binding CurrentBrush}" HorizontalAlignment="Left" Width="300"/>
+
+            <!-- HEX / RGB / 坐标 -->
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                <TextBlock Text="{DynamicResource key_Toolbox_ColorHex}" Foreground="{DynamicResource TreeItemSecondaryText}" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding HexText, Mode=OneWay}" Width="110" Margin="6,0" IsReadOnly="True" IsHitTestVisible="False"/>
+                <Button Content="{DynamicResource key_Toolbox_Copy}" Command="{Binding CopyHexCommand}" Padding="10,3" MinHeight="24"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="{DynamicResource key_Toolbox_ColorRgb}" Foreground="{DynamicResource TreeItemSecondaryText}" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding RgbText, Mode=OneWay}" Width="150" Margin="6,0" IsReadOnly="True" IsHitTestVisible="False"/>
+                <Button Content="{DynamicResource key_Toolbox_Copy}" Command="{Binding CopyRgbCommand}" Padding="10,3" MinHeight="24"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                <TextBlock Text="{DynamicResource key_Toolbox_ColorPos}" Foreground="{DynamicResource TreeItemSecondaryText}" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding PositionText, Mode=OneWay}" Width="110" Margin="6,0" IsReadOnly="True" IsHitTestVisible="False"/>
+            </StackPanel>
+
+            <!-- 屏幕缩放设置（与截图翻译插件一致，用于框选坐标换算） -->
+            <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                <TextBlock Text="{DynamicResource key_Toolbox_ScaleLabel}"
+                           Foreground="{DynamicResource TreeItemSecondaryText}" VerticalAlignment="Center"/>
+                <ComboBox ItemsSource="{Binding ScreenScaleOptions}"
+                          Text="{Binding ScreenScaleText, UpdateSourceTrigger=LostFocus}"
+                          IsEditable="True" Width="72" Margin="6,0"
+                          PreviewMouseLeftButtonDown="OnScaleComboPreviewMouseLeftButtonDown"
+                          VerticalContentAlignment="Center"/>
+                <TextBlock Text="{DynamicResource key_Toolbox_ScaleUnit}"
+                           Foreground="{DynamicResource TreeItemSecondaryText}" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- 操作按钮 -->
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                <Button Content="{DynamicResource key_Toolbox_StartPick}" Command="{Binding StartPickCommand}"
+                        FontSize="13" FontWeight="SemiBold"/>
+                <TextBlock Text="{DynamicResource key_Toolbox_PickHint}" Foreground="{DynamicResource TreeItemSecondaryText}"
+                           FontSize="11" Margin="12,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 右：历史记录 -->
+        <DockPanel Grid.Column="2">
+            <Border DockPanel.Dock="Top" Margin="0,0,0,8">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="{DynamicResource key_Toolbox_ClearHistory}"
+                            Command="{Binding ClearHistoryCommand}" Padding="8,2" MinHeight="24" FontSize="11"/>
+                    <TextBlock Text="{DynamicResource key_Toolbox_History}" FontWeight="SemiBold"
+                               FontSize="13" Foreground="{DynamicResource TextBrush}" VerticalAlignment="Center"/>
+                </DockPanel>
+            </Border>
+            <ListBox ItemsSource="{Binding History}" Background="Transparent" BorderThickness="1"
+                     BorderBrush="{DynamicResource BorderBrush}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="4">
+                            <Border Width="22" Height="22" CornerRadius="3"
+                                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                                    Background="{Binding Brush}"/>
+                            <StackPanel Margin="8,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Hex}" FontFamily="Consolas" FontSize="12"
+                                           Foreground="{DynamicResource TextBrush}"/>
+                                <TextBlock Text="{Binding Position}" FontSize="10"
+                                           Foreground="{DynamicResource TreeItemSecondaryText}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </Grid>
+</UserControl>

@@ -1,7 +1,5 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -14,15 +12,8 @@ namespace YFrame.ViewModel
     /// 插件管理器 ViewModel（AOP 代理），负责 UI 状态和命令路由
     /// HTTP 通信与下载逻辑委托给 PluginManagerService
     /// </summary>
-    public class PluginManagerViewModel : INotifyPropertyChanged
+    public class PluginManagerViewModel : ViewModelBase
     {
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-        #endregion
 
         #region 依赖服务
 
@@ -56,7 +47,7 @@ namespace YFrame.ViewModel
         public string ServerURL
         {
             get => _serverURL;
-            set { _serverURL = value; OnPropertyChanged(); }
+            set => SetProperty(ref _serverURL, value);
         }
 
         private bool _isConnected;
@@ -65,7 +56,14 @@ namespace YFrame.ViewModel
         public bool IsConnected
         {
             get => _isConnected;
-            set { _isConnected = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanConnect)); OnPropertyChanged(nameof(IsEmpty)); }
+            set
+            {
+                if (SetProperty(ref _isConnected, value))
+                {
+                    OnPropertyChanged(nameof(CanConnect));
+                    OnPropertyChanged(nameof(IsEmpty));
+                }
+            }
         }
 
         /// <summary>连接按钮是否可用</summary>
@@ -77,7 +75,7 @@ namespace YFrame.ViewModel
         public string StatusText
         {
             get => _statusText;
-            set { _statusText = value; OnPropertyChanged(); }
+            set => SetProperty(ref _statusText, value);
         }
 
         private Brush _statusBrush = Brushes.Gray;
@@ -86,7 +84,7 @@ namespace YFrame.ViewModel
         public Brush StatusBrush
         {
             get => _statusBrush;
-            set { _statusBrush = value; OnPropertyChanged(); }
+            set => SetProperty(ref _statusBrush, value);
         }
 
         #endregion
@@ -102,7 +100,7 @@ namespace YFrame.ViewModel
         public string PluginCountText
         {
             get => _pluginCountText;
-            set { _pluginCountText = value; OnPropertyChanged(); }
+            set => SetProperty(ref _pluginCountText, value);
         }
 
         private string _downloadStatusText = "";
@@ -111,7 +109,7 @@ namespace YFrame.ViewModel
         public string DownloadStatusText
         {
             get => _downloadStatusText;
-            set { _downloadStatusText = value; OnPropertyChanged(); }
+            set => SetProperty(ref _downloadStatusText, value);
         }
 
 

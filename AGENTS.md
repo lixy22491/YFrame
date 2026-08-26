@@ -20,7 +20,7 @@ YFrame 是一个基于 **.NET 8.0 + WPF** 的**模块化插件桌面框架**，�
 |------|------|------|------|
 | YFrame | `YFrame\` | WPF Application | `YFrame.exe`（主框架 Shell） |
 | YF_Manager | `YF_Manager\` | Class Library | `YF_Manager.dll`（共享基础设施库） |
-| YFrame.Tests | `YFrame.Tests\` | xUnit Test Project | 单元测试（94 个用例） |
+| YFrame.Tests | `YFrame.Tests\` | xUnit Test Project | 单元测试（115 个用例） |
 | YFrame.Installer | `YFrame.Installer\` | WPF Application | `YFrame.Installer.exe`（框架安装程序，仅安装本体） |
 
 ### 插件（位于上层目录 `C:\Users\Administrator\Desktop\code\C#\`）
@@ -52,35 +52,41 @@ YFrame/
 │   ├── MainWindow.xaml                 # 主窗口布局（DockPanel三栏+Menu+StatusBar）
 │   ├── MainWindow.xaml.cs              # 代码后置：构造函数注入ViewModel+Hook服务，OnSourceInitialized初始化
 │   ├── ViewModel/
-│   │   └── MainWindowViewModel.cs      # 核心 ViewModel（~750行，薄门面，委托给子服务）
+│   │   ├── MainWindowViewModel.cs      # 核心 ViewModel（~750行，薄门面，委托给子服务）
+│   │   └── Toolbox/                    # 工具箱工具 ViewModel（取色器/正则测试/MD5校验）
 │   ├── Service/                        # 服务层（从 ViewModel/Service 迁移）
 │   │   ├── LogService.cs               # 日志面板服务（缓冲区管理、500行上限、通过 Mediator 接收日志消息）
 │   │   ├── PluginService.cs            # 插件管理服务（插件切换、命令转发、热键路由、脚本操作）
 │   │   ├── UserControlsService.cs      # 插件加载服务（200行，反射扫描/加载/实例化）
 │   │   ├── PluginManagerService.cs     # 插件管理器服务（AOP单例，HTTP通信、下载/解压插件）
 │   │   ├── HotkeyService.cs            # 全局热键服务（Win32 RegisterHotKey，AOP代理）
-│   │   └── TrayIconService.cs          # 系统托盘图标服务（Win32 Shell_NotifyIcon，AOP代理）
+│   │   ├── TrayIconService.cs          # 系统托盘图标服务（Win32 Shell_NotifyIcon，AOP代理）
+│   │   └── ToolboxService.cs           # 工具箱工具服务（工具注册表 + 视图工厂缓存）
 │   ├── Model/
 │   │   ├── PluginsModel.cs             # 插件列表模型（Name, ID, Status）
 │   │   ├── CtrlDataModel.cs            # 运行时插件实例数据（UserControl, CommandHandler, Parameters）
-│   │   └── RemotePluginInfo.cs         # 远程插件信息模型（插件管理器用，含下载状态）
+│   │   ├── RemotePluginInfo.cs         # 远程插件信息模型（插件管理器用，含下载状态）
+│   │   └── ToolItem.cs                 # 工具箱工具项模型（ID, Name, Description）
 │   ├── View/UC/
-│   │   └── PerformanceMonitor.xaml/.cs # LiveCharts CPU/内存图表（5秒采样，30秒窗口）
+│   │   ├── PerformanceMonitor.xaml/.cs # LiveCharts CPU/内存图表（5秒采样，30秒窗口）
+│   │   └── Toolbox/                    # 工具箱工具视图（取色器/正则测试/MD5校验 + 区域选框覆盖窗）
 │   ├── Common/
 │   │   ├── Images/Logo.png             # 应用 Logo
 │   │   ├── Images/Logo.ico             # 应用图标（.ico 格式）
 │   │   ├── Themes/                     # 四套主题 XAML（Dark/Cream/LightBlue/Green） + ControlStyles
+│   │   ├── Tools/ScreenCaptureHelper.cs # 屏幕区域截图帮助类（P/Invoke BitBlt，供取色器框选截图）
 │   │   └── Language/                   # zh-CN.xaml + en-US.xaml
 │   └── Properties/                     # 标准 WPF 配置
 │
 ├── YF_Manager/                         # 共享框架库
 │   ├── YF_Manager.cs                   # 静态入口：YF_Manager_Main 类 + 静态 logger
+│   ├── BaseClass/ViewModelBase.cs      # 基类 ViewModel（实现 INotifyPropertyChanged + SetProperty）
 │   ├── Interface/
 │   │   ├── I_YF_Detail.cs              # 插件元数据接口（YF_ID, YF_Name）
 │   │   └── I_YF_Command.cs             # 插件命令接口（ExecuteCommand, OnPluginCallback）
 │   └── Common/
 │       ├── YF_Di.cs                     # DI 容器全局持有者（IServiceProvider 静态引用）
-│       ├── Config.cs                   # 全局常量（LogPath, PluginPath, TCP端口, PaddlePath）
+│       ├── Config.cs                   # 全局常量（LogPath, PluginPath, TCP端口, ScreenScale等）
 │       ├── YF_Messenger.cs             # 轻量级消息中介（Mediator 模式核心，Register/Send/Unregister）
 │       ├── YF_Messages.cs              # 8 种消息类型定义（LogAppend、PluginShown、HotkeyTriggered 等）
 │       ├── Attributes/LogAttribute.cs  # [Log] 特性（LogLevel: Debug/Info/Warning/Error）
@@ -88,7 +94,9 @@ YFrame/
 │       ├── Tools/
 │       │   ├── YF_Manager_Log.cs       # 日志系统（HTML格式，按天/类型分文件，1MB轮转，最多999文件）
 │       │   ├── YF_TcpHelper.cs         # 网络工具（GetLocalIP, GetDefaultGatewayIP）
-│       │   └── YF_FileHelper.cs        # 文件工具（CopyDirectory, SetClipboardWithRetry, OpenFolder）
+│       │   ├── YF_FileHelper.cs        # 文件工具（CopyDirectory, SetClipboardWithRetry, OpenFolder）
+│       │   ├── YF_Md5Hasher.cs         # MD5 哈希工具（字符串/文件分块异步计算 + 双文件对比）
+│       │   └── YF_RegexHelper.cs       # 正则测试辅助（模式校验、选项构建、匹配执行）
 │       ├── YF_RelayCommand.cs          # ICommand实现（无参版 + 泛型版<T>）
 │       └── YF_DelegateFunctionModel.cs # 委托类型声明（dvFunc_Vs, dvFunc_Vs_s）
 │
@@ -105,7 +113,9 @@ YFrame/
 │   │   │   └── Tools/
 │   │   │       ├── YF_FileHelperTests.cs      # 15 个 — 文件系统操作
 │   │   │       ├── YF_TcpHelperTests.cs       # 5 个 — 网络工具
-│   │   │       └── YF_Manager_LogTests.cs     # 8 个 — 日志系统
+│   │   │       ├── YF_Manager_LogTests.cs     # 8 个 — 日志系统
+│   │   │       ├── Md5HasherTests.cs          # 10 个 — MD5 哈希计算
+│   │   │       └── RegexHelperTests.cs        # 11 个 — 正则测试辅助
 │   │   └── Interface/
 │   │       └── PluginEventArgsTests.cs        # 2 个 — 事件参数
 │   ├── YFrame/                         # YFrame 主项目相关测试
@@ -113,7 +123,7 @@ YFrame/
 │   │   │   ├── LogServiceTests.cs             # 14 个 — 日志缓冲区管理
 │   │   │   └── PluginServiceTests.cs          # 20 个 — 插件调度、命令路由
 │   │   └── Model/
-│   │       ├── PluginsModelTests.cs           # 8 个 — INotifyPropertyChanged
+│   │       ├── PluginsModelTests.cs           # 8 个 — ViewModelBase 属性通知
 │   │       └── CtrlDataModelTests.cs          # 5 个 — 插件实例数据模型
 │
 ├── YFrame.Installer/                   # 框架安装程序（WPF 向导式，仅安装本体）
@@ -356,11 +366,27 @@ PluginService.OnHotkeyPressedInternal()
 | 面板 | 标签页 | 索引 | 说明 |
 |------|--------|------|------|
 | **左侧面板** | 插件列表 | 0 | VS Code 风格活动栏，垂直旋转文字，选中竖线指示 |
-| **左侧面板** | 工具箱 | 1 | 工具箱内容区（待扩展） |
+| **左侧面板** | 工具箱 | 1 | 内置小工具列表（取色器/正则测试/MD5校验，点击后在主工作区打开） |
 | **右侧面板** | 日志 | 0 | 实时日志输出，支持清除 |
 | **右侧面板** | 参数 | 1 | 参数面板（待扩展） |
 
 切换通过 `SwitchLeftPanelCommand` / `SwitchRightPanelCommand` 命令绑定，ViewModel 维护 `ActiveLeftPanel` / `ActiveRightPanel` 属性。面板切换会通过 `YF_Messenger` 发送 `PanelSwitchMessage`。
+
+### 3.9.1 工具箱（内置小工具）
+
+工具箱是框架**内置**的轻量工具集合（非插件），点击工具项后在主工作区**叠加显示**（不清空插件区，切换回插件时插件状态保留）。
+
+**架构：** `ToolboxService`（工具注册表 ID→视图工厂 + 视图单例缓存）→ `MainWindowViewModel.SelectTool()` 打开 → 主工作区 `ActiveToolView` 叠加 ContentControl 显示。
+
+**内置工具（当前 3 个）：**
+
+| 工具 | ViewModel | View | 说明 |
+|------|-----------|------|------|
+| 屏幕取色器 | `ViewModel/Toolbox/ColorPickerToolViewModel.cs` | `View/UC/Toolbox/ColorPickerTool.xaml` | 框选屏幕区域截图（`ScreenCaptureHelper` P/Invoke BitBlt）→ 左上显示缩略图 → 点击取色；屏幕缩放 100-200 下拉框（`Config.ScreenScale`，与截图插件共用） |
+| 正则测试 | `ViewModel/Toolbox/RegexTesterToolViewModel.cs` | `View/UC/Toolbox/RegexTesterTool.xaml` | 模式校验/选项/匹配列表，逻辑在 `YF_RegexHelper`；匹配前自动归一化换行（`\r\n`→`\n`），保证多行 `^$` 锚点生效 |
+| MD5 校验 | `ViewModel/Toolbox/Md5CompareToolViewModel.cs` | `View/UC/Toolbox/Md5CompareTool.xaml` | 单文件 MD5 / 双文件对比（版本校验），逻辑在 `YF_Md5Hasher`，异步分块 + 进度 |
+
+**关键设计：** 工具界面符合 MVVM（继承 `ViewModelBase`）；纯逻辑抽到 YF_Manager（`YF_Md5Hasher` / `YF_RegexHelper`）便于单元测试；取色截图零第三方依赖（P/Invoke GDI）。
 
 ### 3.10 依赖注入（DI）
 
@@ -493,7 +519,7 @@ push/PR to main → 自动触发
 | 冰火深蓝 | `LightBlueTheme.xaml` | 背景 #0B1526，强调色 #00CCF0 |
 | 翠火青绿 | `GreenWhiteTheme.xaml` | 背景 #0A1410，强调色 #00E676 |
 
-全局控件样式：`ControlStyles.xaml`（Button/TextBox/Label）
+全局控件样式：`ControlStyles.xaml`（Button/TextBox/CheckBox/ComboBox/Label）
 
 ### 语言（2种）
 - `zh-CN.xaml` 简体中文（默认）
@@ -522,6 +548,7 @@ push/PR to main → 自动触发
 | 插件服务器端口 | 9000 | Config.cs |
 | 插件管理器地址 | http://127.0.0.1 | Config.cs |
 | PaddleOCR 路径 | `plugins\YF_ScreenOCRTranslate\inference` | Config.cs |
+| 屏幕缩放 | 125（100-200，取色器/截图共用） | Config.cs |
 | 窗口尺寸 | 800 x 1200 | MainWindow.xaml |
 | 窗口标题 | "YF Tools" | MainWindow.xaml |
 | C# 可空 | enabled | .csproj |

@@ -27,13 +27,32 @@ namespace YFrame
     /// <summary>
     /// PerformanceMonitor.xaml 的交互逻辑
     /// </summary>
-    public partial class PerformanceMonitor : UserControl, INotifyPropertyChanged
+    public partial class PerformanceMonitor : UserControl
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName = null)
+        /// <summary>
+        /// 内部属性通知辅助类，继承 ViewModelBase 以复用属性变更通知机制
+        /// </summary>
+        private sealed class PropertyNotifier : ViewModelBase
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            /// <summary>
+            /// 对外触发指定属性的变更通知
+            /// </summary>
+            /// <param name="propertyName">属性名</param>
+            public void Notify(string propertyName) => OnPropertyChanged(propertyName);
+        }
+
+        /// <summary>
+        /// 属性通知辅助对象
+        /// </summary>
+        private readonly PropertyNotifier _notifier = new();
+
+        /// <summary>
+        /// 属性变更事件，转发到内部通知器，供 WPF 数据绑定监听
+        /// </summary>
+        public event PropertyChangedEventHandler? PropertyChanged
+        {
+            add => _notifier.PropertyChanged += value;
+            remove => _notifier.PropertyChanged -= value;
         }
 
         public SeriesCollection SeriesCollection { get; set; }
@@ -165,7 +184,7 @@ namespace YFrame
                 UpdateChartData(cpuUsage, memoryUsagePercent);
 
                 // 通知 UI 更新标签
-                OnPropertyChanged(nameof(Labels));
+                _notifier.Notify(nameof(Labels));
 
                 MainWindowViewModel.dlg_Show_Cpu_Memory(cpuUsage.ToString("0.0"), $"{(usedMemoryMB / 1024).ToString("0.0")}/{(totalMemoryMB / 1024).ToString("0.0")}");
 

@@ -1,0 +1,105 @@
+<UserControl x:Class="YFrame.View.UC.Toolbox.RegexTesterTool"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="760">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <TextBlock Grid.Row="0" Text="{DynamicResource key_Toolbox_RegexTester}"
+                   FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource TextBrush}" Margin="0,0,0,10"/>
+
+        <!-- 模式输入 + 选项 -->
+        <Grid Grid.Row="1" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Text="{DynamicResource key_Toolbox_RegexPattern}"
+                       Foreground="{DynamicResource TreeItemSecondaryText}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <TextBox Grid.Column="1" Text="{Binding Pattern, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalContentAlignment="Center" FontFamily="Consolas"/>
+            <CheckBox Grid.Column="2" Content="{DynamicResource key_Toolbox_RegexIgnoreCase}"
+                      IsChecked="{Binding IgnoreCase}" Margin="12,0,0,0" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="3" Content="{DynamicResource key_Toolbox_RegexMultiline}"
+                      IsChecked="{Binding Multiline}" Margin="12,0,0,0" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="4" Content="{DynamicResource key_Toolbox_RegexSingleline}"
+                      IsChecked="{Binding Singleline}" Margin="12,0,0,0" VerticalAlignment="Center"/>
+            <CheckBox Grid.Column="5" Content="{DynamicResource key_Toolbox_RegexIgnoreWS}"
+                      IsChecked="{Binding IgnorePatternWhitespace}" Margin="12,0,0,0" VerticalAlignment="Center"/>
+        </Grid>
+
+        <!-- 测试文本 -->
+        <Grid Grid.Row="2" Margin="0,0,0,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="{DynamicResource key_Toolbox_RegexInput}"
+                       Foreground="{DynamicResource TreeItemSecondaryText}" Margin="0,0,0,4"/>
+            <TextBox Grid.Row="1" Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                     AcceptsReturn="True" TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto" FontFamily="Consolas"
+                     VerticalContentAlignment="Top" Padding="6,4"/>
+        </Grid>
+
+        <!-- 按钮 + 状态 -->
+        <Grid Grid.Row="3" Margin="0,0,0,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="{DynamicResource key_Toolbox_RegexTest}"
+                    Command="{Binding TestCommand}" FontWeight="SemiBold"/>
+            <Button Grid.Column="1" Content="{DynamicResource key_Toolbox_Clear}"
+                    Command="{Binding ClearCommand}" Margin="8,0,0,0"/>
+            <TextBlock Grid.Column="2" Text="{Binding MatchSummary}" VerticalAlignment="Center"
+                       Foreground="{DynamicResource TreeItemAccent}" FontWeight="SemiBold" Margin="16,0,0,0"/>
+            <TextBlock Grid.Column="3" Text="{Binding StatusText}" Foreground="{Binding StatusBrush}"
+                       VerticalAlignment="Center" FontSize="11" Margin="8,0,0,0"/>
+        </Grid>
+
+        <!-- 匹配结果列表 -->
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="{DynamicResource key_Toolbox_RegexMatches}"
+                       Foreground="{DynamicResource TreeItemSecondaryText}" Margin="0,0,0,4"/>
+            <ListBox Grid.Row="1" ItemsSource="{Binding Matches}" Background="Transparent"
+                     BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Index}" FontFamily="Consolas"
+                                       Foreground="{DynamicResource TreeItemSecondaryText}" Width="70"/>
+                            <TextBlock Grid.Column="1" Text="{Binding Value}" FontFamily="Consolas"
+                                       Foreground="{DynamicResource TextBrush}" TextWrapping="Wrap"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+</UserControl>

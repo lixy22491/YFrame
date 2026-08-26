@@ -75,9 +75,7 @@
             <MenuItem Header="{DynamicResource key_View}" Foreground="{DynamicResource TextBrush}" >
                 <MenuItem Header="{DynamicResource key_Left sidebar}" IsCheckable="True" IsChecked="True" Command="{Binding ToggleLeftToolWindowCommand}"/>
                 <MenuItem Header="{DynamicResource key_Right sidebar}" IsCheckable="True" IsChecked="True" Command="{Binding ToggleRightToolWindowCommand}"/>
-                <Separator/>
                 <MenuItem Header="{DynamicResource key_FullScreen}" Command="{Binding ToggleFullScreenCommand}"/>
-                <Separator/>
                 <MenuItem Header="{DynamicResource key_DarkGray theme}" Command="{Binding SetThemeCommand}" CommandParameter="Common/Themes/DarkGrayTheme.xaml"/>
                 <MenuItem Header="{DynamicResource key_CreamWhite theme}" Command="{Binding SetThemeCommand}" CommandParameter="Common/Themes/CreamWhiteTheme.xaml"/>
                 <MenuItem Header="{DynamicResource key_LightBlue theme}" Command="{Binding SetThemeCommand}" CommandParameter="Common/Themes/LightBlueTheme.xaml"/>
@@ -336,7 +334,7 @@
                                          SelectedItem="{Binding SelectedPlugin, Mode=TwoWay}"
                                          Margin="0,2,0,0"/>
                             </Grid>
-                            <!-- 面板内容：工具箱（预留） -->
+                            <!-- 面板内容：工具箱 -->
                             <Grid>
                                 <Grid.Style>
                                     <Style TargetType="Grid">
@@ -350,10 +348,17 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Grid.Style>
-                                <TextBlock Text="{DynamicResource key_ToolboxContent}"
-                                           Foreground="{DynamicResource TreeItemSecondaryText}"
-                                           FontSize="12" VerticalAlignment="Top"
-                                           Margin="14,14,0,0"/>
+                                <ListBox Style="{StaticResource VsPluginListBox}"
+                                         ItemContainerStyle="{StaticResource VsToolboxListItem}"
+                                         ItemsSource="{Binding Tools}"
+                                         SelectedItem="{Binding SelectedTool, Mode=TwoWay}"
+                                         Margin="0,2,0,0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
                             </Grid>
                         </DockPanel>
                     </Border>
@@ -365,7 +370,33 @@
                  HorizontalAlignment="Left" VerticalAlignment="Stretch"/>
 
             <Grid x:Name="DynamicContentHost" Grid.Row="1"  Grid.Column="1" Margin="5" Background="{DynamicResource BackgroundBrush}">
-                <ContentControl Content="{Binding Grid_Show_Array}" Margin="5"/>
+                <!-- 插件显示区（打开工具箱工具时隐藏，恢复时保留插件状态） -->
+                <ContentControl Content="{Binding Grid_Show_Array}" Margin="5">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsToolActive}" Value="True">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
+                <!-- 工具箱工具显示区（默认隐藏，打开工具时覆盖插件区） -->
+                <ContentControl Content="{Binding ActiveToolView}" Margin="5">
+                    <ContentControl.Style>
+                        <Style TargetType="ContentControl">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsToolActive}" Value="True">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsToolActive}" Value="False">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentControl.Style>
+                </ContentControl>
             </Grid>
 
             <GridSplitter Grid.Column="1" Grid.Row="1" Width="3" Background="{DynamicResource BorderBrush}" 
