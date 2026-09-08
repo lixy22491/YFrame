@@ -117,5 +117,42 @@ namespace YF_Manager
             get => Get("125");
             set => Set(value);
         }
+
+        /// <summary>
+        /// 穿透服务器IP地址
+        /// </summary>
+        public static string NetServerIP
+        {
+            get => Get("123.57.246.122");
+            set => Set(value);
+        }
+
+        /// <summary>
+        /// 穿透服务器端口
+        /// </summary>
+        public static string NetServerPort
+        {
+            get => Get("8888");
+            set => Set(value);
+        }
+
+        /// <summary>
+        /// 本地目标转发端口
+        /// </summary>
+        public static string NetGameServerPort
+        {
+            get => Get("8211");
+            set => Set(value);
+        }
+
+
+        /// <summary>
+        /// 本地目标转发端口
+        /// </summary>
+        public static string NetUserName
+        {
+            get => Get(Environment.UserName);
+            set => Set(value);
+        }
     }
 }

@@ -98,8 +98,6 @@
 
     <!-- ============================================================ -->
     <!-- 统一输入框样式                                                 -->
-    <!-- 注意：Padding 放在内容宿主(ScrollViewer)上而非外层Border，      -->
-    <!-- 可避免固定高度下文本被垂直裁剪，仅显示上半部分的问题             -->
     <!-- ============================================================ -->
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
@@ -147,7 +145,6 @@
 
     <!-- ============================================================ -->
     <!-- 可编辑下拉框内部输入框样式（无边框、透明背景、右侧预留箭头空间）  -->
-    <!-- 注意：必须定义在 ComboBox 样式之前，供其模板 StaticResource 引用 -->
     <!-- ============================================================ -->
     <Style x:Key="ComboBoxEditableTextBox" TargetType="{x:Type TextBox}">
         <Setter Property="Background" Value="Transparent"/>
@@ -322,6 +319,106 @@
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Padding" Value="0"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+
+    <!-- ============================================================ -->
+    <!-- 统一列表框样式（ListBox 容器）                                 -->
+    <!-- ============================================================ -->
+    <Style TargetType="{x:Type ListBox}">
+        <Setter Property="Background" Value="{DynamicResource BackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                        <ScrollViewer Padding="{TemplateBinding Padding}"
+                                      VerticalScrollBarVisibility="Auto"
+                                      Focusable="False">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- 禁用：整体降透明度 -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Border" Property="Opacity" Value="0.6"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ============================================================ -->
+    <!-- 统一列表项样式（ListBoxItem）                                  -->
+    <!-- VS 2022 树形列表交互风格：悬停高亮 / 选中背景 + 文字反白         -->
+    <!-- / 左侧 3px 强调色指示条，颜色全部取自当前主题资源键              -->
+    <!-- 注意：主窗口插件列表等已显式指定 ItemContainerStyle 的列表       -->
+    <!-- 不受此隐式样式影响                                              -->
+    <!-- ============================================================ -->
+    <Style TargetType="{x:Type ListBoxItem}">
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="FontFamily" Value="Segoe UI"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Border x:Name="Root" Background="Transparent" Padding="0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- 选中态左侧指示条（主题强调色） -->
+                            <Border x:Name="SelectionBar" Grid.Column="0"
+                                    Background="Transparent" CornerRadius="1"/>
+                            <!-- 内容区（由各处的 ItemTemplate 提供具体内容） -->
+                            <Border x:Name="ContentHost" Grid.Column="1"
+                                    Background="Transparent" Padding="6,4">
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <!-- 鼠标悬停：内容区浅色高亮 -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ContentHost" Property="Background"
+                                    Value="{DynamicResource TreeItemHoverBackground}"/>
+                        </Trigger>
+                        <!-- 选中：指示条高亮 + 选中背景 + 文字反白 -->
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="SelectionBar" Property="Background"
+                                    Value="{DynamicResource TreeItemAccent}"/>
+                            <Setter TargetName="ContentHost" Property="Background"
+                                    Value="{DynamicResource TreeItemSelectedBackground}"/>
+                            <Setter Property="Foreground" Value="White"/>
+                        </Trigger>
+                        <!-- 禁用：文字变灰 -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground"
+                                    Value="{DynamicResource TreeItemSecondaryText}"/>
+                            <Setter Property="Cursor" Value="Arrow"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>

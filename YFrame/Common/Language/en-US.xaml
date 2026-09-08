@@ -286,4 +286,54 @@
     <sys:String x:Key="key_TcpHelper_AutoReverse">Auto reverse connect on broadcast</sys:String>
     <sys:String x:Key="key_TcpHelper_PeriodicBroadcast">Periodic broadcast</sys:String>
 
+    <!--NAT Penetration-->
+    <sys:String x:Key="key_Pen_ConnectionTitle">Server Connection</sys:String>
+    <sys:String x:Key="key_Pen_ServerIP">Server IP:</sys:String>
+    <sys:String x:Key="key_Pen_Port">Port:</sys:String>
+    <sys:String x:Key="key_Pen_Name">Name:</sys:String>
+    <sys:String x:Key="key_Pen_GamePort">Game Port:</sys:String>
+    <sys:String x:Key="key_Pen_Connect">Connect</sys:String>
+    <sys:String x:Key="key_Pen_Disconnect">Disconnect</sys:String>
+    <sys:String x:Key="key_Pen_StatusConnected">Connected</sys:String>
+    <sys:String x:Key="key_Pen_StatusDisconnected">Not Connected</sys:String>
+    <sys:String x:Key="key_Pen_HostModeTab">🖥️ Host Mode (Server Owner)</sys:String>
+    <sys:String x:Key="key_Pen_PlayerModeTab">🎮 Player Mode (Joiner)</sys:String>
+    <sys:String x:Key="key_Pen_HostPanelTitle">Host Panel</sys:String>
+    <sys:String x:Key="key_Pen_RoomName">Room Name:</sys:String>
+    <sys:String x:Key="key_Pen_UdpMode">UDP Mode</sys:String>
+    <sys:String x:Key="key_Pen_CreateRoom">Create Room</sys:String>
+    <sys:String x:Key="key_Pen_RoomCreated">✅ Room Created</sys:String>
+    <sys:String x:Key="key_Pen_JoinCode">Join Code:</sys:String>
+    <sys:String x:Key="key_Pen_Copy">📋 Copy</sys:String>
+    <sys:String x:Key="key_Pen_LeaveRoom">Leave Room</sys:String>
+    <sys:String x:Key="key_Pen_WaitingPlayers">Waiting for players...</sys:String>
+    <sys:String x:Key="key_Pen_CreateFailed">Create failed: </sys:String>
+    <sys:String x:Key="key_Pen_PlayerHasJoined">A player has joined the room</sys:String>
+    <sys:String x:Key="key_Pen_PlayerJoinedNotice">Player {0} joined</sys:String>
+    <sys:String x:Key="key_Pen_OnlinePlayers">Online: {0}/{1}</sys:String>
+    <sys:String x:Key="key_Pen_PlayerPanelTitle">Player Panel</sys:String>
+    <sys:String x:Key="key_Pen_ProxyPort">Proxy Port:</sys:String>
+    <sys:String x:Key="key_Pen_JoinRoom">Join Room</sys:String>
+    <sys:String x:Key="key_Pen_TcpTransportUdp">Transport UDP over TCP (use when UDP is blocked)</sys:String>
+    <sys:String x:Key="key_Pen_RefreshRoomList">🔄 Refresh Rooms</sys:String>
+    <sys:String x:Key="key_Pen_PublicRooms">Public Rooms (select by room name to join)</sys:String>
+    <sys:String x:Key="key_Pen_PlayersLabel">Players </sys:String>
+    <sys:String x:Key="key_Pen_HostLabel">  Host:</sys:String>
+    <sys:String x:Key="key_Pen_JoinSelectedRoom">Join Selected Room</sys:String>
+    <sys:String x:Key="key_Pen_RoomJoined">✅ Room Joined</sys:String>
+    <sys:String x:Key="key_Pen_ProxyAddress">Proxy Address:</sys:String>
+    <sys:String x:Key="key_Pen_TcpProxyRunning">TCP proxy running</sys:String>
+    <sys:String x:Key="key_Pen_UdpProxyRunning">UDP proxy running</sys:String>
+    <sys:String x:Key="key_Pen_StatsTitle">📊 Transfer Stats</sys:String>
+    <sys:String x:Key="key_Pen_Upload">Upload</sys:String>
+    <sys:String x:Key="key_Pen_Download">Download</sys:String>
+    <sys:String x:Key="key_Pen_Sessions">Sessions</sys:String>
+    <sys:String x:Key="key_Pen_DiagTitle">🔧 Diagnostics</sys:String>
+    <sys:String x:Key="key_Pen_Diagnose">📋 Diagnose</sys:String>
+    <sys:String x:Key="key_Pen_EchoTest">🔄 Echo Test</sys:String>
+    <sys:String x:Key="key_Pen_RefreshStats">📊 Refresh Stats</sys:String>
+    <sys:String x:Key="key_Pen_EchoMode">Echo test mode (data is echoed back without reaching the game server)</sys:String>
+    <sys:String x:Key="key_Pen_LogTitle">📜 Log</sys:String>
+    <sys:String x:Key="key_Pen_CopyLog">📋 Copy Log</sys:String>
+
 </ResourceDictionary>

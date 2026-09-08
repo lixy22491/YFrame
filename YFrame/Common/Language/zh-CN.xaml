@@ -286,4 +286,54 @@
     <sys:String x:Key="key_TcpHelper_AutoReverse">收到广播后自动反向连接</sys:String>
     <sys:String x:Key="key_TcpHelper_PeriodicBroadcast">定时广播通知</sys:String>
 
+    <!--NAT 内网穿透-->
+    <sys:String x:Key="key_Pen_ConnectionTitle">服务器连接</sys:String>
+    <sys:String x:Key="key_Pen_ServerIP">服务器 IP:</sys:String>
+    <sys:String x:Key="key_Pen_Port">端口:</sys:String>
+    <sys:String x:Key="key_Pen_Name">名称:</sys:String>
+    <sys:String x:Key="key_Pen_GamePort">游戏端口:</sys:String>
+    <sys:String x:Key="key_Pen_Connect">连接</sys:String>
+    <sys:String x:Key="key_Pen_Disconnect">断开</sys:String>
+    <sys:String x:Key="key_Pen_StatusConnected">已连接</sys:String>
+    <sys:String x:Key="key_Pen_StatusDisconnected">未连接</sys:String>
+    <sys:String x:Key="key_Pen_HostModeTab">🖥️ Host 模式（开服者）</sys:String>
+    <sys:String x:Key="key_Pen_PlayerModeTab">🎮 Player 模式（加入者）</sys:String>
+    <sys:String x:Key="key_Pen_HostPanelTitle">Host 控制面板</sys:String>
+    <sys:String x:Key="key_Pen_RoomName">房间名称:</sys:String>
+    <sys:String x:Key="key_Pen_UdpMode">UDP 模式</sys:String>
+    <sys:String x:Key="key_Pen_CreateRoom">创建房间</sys:String>
+    <sys:String x:Key="key_Pen_RoomCreated">✅ 房间已创建</sys:String>
+    <sys:String x:Key="key_Pen_JoinCode">加入码:</sys:String>
+    <sys:String x:Key="key_Pen_Copy">📋 复制</sys:String>
+    <sys:String x:Key="key_Pen_LeaveRoom">离开房间</sys:String>
+    <sys:String x:Key="key_Pen_WaitingPlayers">等待玩家加入...</sys:String>
+    <sys:String x:Key="key_Pen_CreateFailed">创建异常: </sys:String>
+    <sys:String x:Key="key_Pen_PlayerHasJoined">玩家已加入房间</sys:String>
+    <sys:String x:Key="key_Pen_PlayerJoinedNotice">玩家 {0} 已加入</sys:String>
+    <sys:String x:Key="key_Pen_OnlinePlayers">在线玩家: {0}/{1}</sys:String>
+    <sys:String x:Key="key_Pen_PlayerPanelTitle">Player 控制面板</sys:String>
+    <sys:String x:Key="key_Pen_ProxyPort">代理端口:</sys:String>
+    <sys:String x:Key="key_Pen_JoinRoom">加入房间</sys:String>
+    <sys:String x:Key="key_Pen_TcpTransportUdp">TCP 传输 UDP 数据（UDP不通时使用）</sys:String>
+    <sys:String x:Key="key_Pen_RefreshRoomList">🔄 刷新房间列表</sys:String>
+    <sys:String x:Key="key_Pen_PublicRooms">公开房间（按房间名选择加入）</sys:String>
+    <sys:String x:Key="key_Pen_PlayersLabel">玩家 </sys:String>
+    <sys:String x:Key="key_Pen_HostLabel">  房主:</sys:String>
+    <sys:String x:Key="key_Pen_JoinSelectedRoom">加入选中房间</sys:String>
+    <sys:String x:Key="key_Pen_RoomJoined">✅ 已加入房间</sys:String>
+    <sys:String x:Key="key_Pen_ProxyAddress">代理地址:</sys:String>
+    <sys:String x:Key="key_Pen_TcpProxyRunning">TCP 代理运行中</sys:String>
+    <sys:String x:Key="key_Pen_UdpProxyRunning">UDP 代理运行中</sys:String>
+    <sys:String x:Key="key_Pen_StatsTitle">📊 传输统计</sys:String>
+    <sys:String x:Key="key_Pen_Upload">上传</sys:String>
+    <sys:String x:Key="key_Pen_Download">下载</sys:String>
+    <sys:String x:Key="key_Pen_Sessions">会话数</sys:String>
+    <sys:String x:Key="key_Pen_DiagTitle">🔧 诊断工具</sys:String>
+    <sys:String x:Key="key_Pen_Diagnose">📋 诊断</sys:String>
+    <sys:String x:Key="key_Pen_EchoTest">🔄 回显测试</sys:String>
+    <sys:String x:Key="key_Pen_RefreshStats">📊 刷新统计</sys:String>
+    <sys:String x:Key="key_Pen_EchoMode">回显测试模式（开启后数据原路返回，不经过游戏服务器）</sys:String>
+    <sys:String x:Key="key_Pen_LogTitle">📜 运行日志</sys:String>
+    <sys:String x:Key="key_Pen_CopyLog">📋 复制日志</sys:String>
+
 </ResourceDictionary>
