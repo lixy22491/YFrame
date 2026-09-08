@@ -42,7 +42,7 @@ namespace YF_Manager
         /// </summary>
         public static string AIModelpath
         {
-            get => Get(@"plugins\YF_AIHelper\Model\DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf");
+            get => Get(@"plugins\YF_AIHelper\Model\Qwen3.5-9B-DeepSeek-V4-Flash-Q4_K_M.gguf");
             set => Set(value);
         }
 
